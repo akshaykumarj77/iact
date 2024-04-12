@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: python-hl
+  labels:
+    app: python
+spec:
+  type: {{ .Values.hl.type }}
+  clusterIP: None
+  selector:
+    app: python
+  ports:
+	{{- .Values.hl.ports | toYaml | nindent 2 -}}

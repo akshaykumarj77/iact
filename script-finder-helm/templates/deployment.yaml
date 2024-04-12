@@ -1,0 +1,94 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: iact-scriptfinder
+  labels:
+       name: iact-scriptfinder
+spec:
+  replicas: {{ .Values.iactScriptfinder.replicas }}
+  selector:
+    matchLabels:
+      name: iact-scriptfinder
+  template:
+    metadata:
+      annotations:
+        sidecar.istio.io/proxyCPULimit: "1000m"
+        sidecar.istio.io/proxyCPU: "200m"
+        sidecar.istio.io/proxyMemory: "128Mi"
+        sidecar.istio.io/proxyMemoryLimit: "1Gi"
+      labels:
+        name: iact-scriptfinder
+        app: iact-scriptfinder
+        version: 1.0.0
+    spec:
+      containers:
+      - env:
+        - name: db_user
+          value: iona_svc
+        - name: db_password
+          valueFrom:
+            secretKeyRef:
+              key: POSTGRES-PASSWORD
+              name: {{ .Values.secretName}}
+        - name: storagekey
+          valueFrom:
+            secretKeyRef:
+              key: STORAGE-ACCESS-KEY
+              name: {{ .Values.secretName}}
+        - name: storageaccountname
+          valueFrom:
+            secretKeyRef:
+              key: STORAGE-ACCOUNT-NAME
+              name: {{ .Values.secretName}}
+        - name: KUBERNETES_CLUSTER_DOMAIN
+          value: {{ .Values.kubernetesClusterDomain }}
+        image: {{ .Values.iactScriptfinder.iactScriptfinder.image.repository }}:{{ .Values.iactScriptfinder.iactScriptfinder.image.tag
+          | default .Chart.AppVersion }}
+        imagePullPolicy: IfNotPresent
+        name: iact-scriptfinder
+        resources: {{- toYaml .Values.iactScriptfinder.iactScriptfinder.resources | nindent
+          10 }}
+        securityContext:
+          readOnlyRootFilesystem: true
+        terminationMessagePath: /dev/termination-log
+        terminationMessagePolicy: File
+        volumeMounts:
+        - mountPath: /mnt/secrets-store
+          name: secrets-store-inline
+          readOnly: true
+        - mountPath: /config/ApplicationCustomProcessor.yaml
+          name: scriptfinder-config
+          subPath: ApplicationCustomProcessor.yaml
+        - mountPath: /config/Global.yaml
+          name: global-config
+          subPath: Global.yaml
+        - mountPath: /tmp
+          name: tmp
+      dnsConfig:
+        options:
+        - name: ndots
+          value: "1"
+      imagePullSecrets:
+      - name: acrsecret2
+      restartPolicy: Always
+      securityContext:
+        fsGroup: 1000
+        runAsNonRoot: true
+        runAsUser: 1000
+      volumes:
+      - csi:
+          driver: secrets-store.csi.k8s.io
+          readOnly: true
+          volumeAttributes:
+            secretProviderClass: {{ .Values.secretProviderClass }}
+        name: secrets-store-inline
+      - emptyDir: {}
+        name: tmp
+      - configMap:
+          defaultMode: 420
+          name: scriptfinder-config
+        name: scriptfinder-config
+      - configMap:
+          defaultMode: 420
+          name: global-config
+        name: global-config

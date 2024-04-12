@@ -1,0 +1,20 @@
+apiVersion: v1
+data:
+  ApplicationCustomProcessor.yaml:  |
+   application:
+     NervIO:
+       stream-config:
+         client.id: NervIOProcessor-29
+         group.id: test-consumer-gr199
+         application.id: stateless_processor_id198
+       statestore:
+         storename: appstore
+       jmx.metrics.config:
+         collection.interval: 10
+       transformer-config:
+         customtransform:
+           classname: "com.hcl.iAct.Driver"
+           config: "{\"storage_type\": \"adls\",\"db_url\": \"jdbc:postgresql://postgres.datahub-ns.svc.cluster.local:5432/iact\",\"db_minidle\": 1,\"db_maxpoolsize\": 2,\"root_drl_path\":\"iona/iAct/Adapter/decision-service.drl\",\"miniourl\": \"http://minio.minio-ns.svc.cluster.local:9000\",\"root\": \"snowtopic\",\"bootstrapserver\": \"cp-kafka.core-ns.svc.cluster.local:9092\",\"topic\": \"scripttopic\",\"keyserializer\": \"org.apache.kafka.common.serialization.StringSerializer\",\"valueserializer\": \"org.apache.kafka.common.serialization.StringSerializer\",\"alertmanagerurl\":\"http://alertmanager-headless.observe-ns.svc.cluster.local:9093/api/v1/alerts\",\"kafka.ssl.enable\":\"false\", \"retries\":\"0\"}"
+kind:  ConfigMap
+metadata:
+  name: snow-iact-mapper-config

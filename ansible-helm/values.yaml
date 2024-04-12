@@ -1,0 +1,17 @@
+ansibleHl:
+  ports:
+  - port: 2022
+    targetPort: 0
+  type: ClusterIP
+ansibleProd:
+  ansibleProd:
+    image:
+      repository: odakscore.azurecr.io/compliant/iona-ansible
+      tag: latest
+  replicas: 1
+kubernetesClusterDomain: cluster.local
+pvc:
+  pvcAnsibleData:
+    storageRequest: 50Gi
+  pvcAnsibleSsh:
+    storageRequest: 1Gi

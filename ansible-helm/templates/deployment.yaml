@@ -1,0 +1,92 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ansible-prod
+  labels:
+    app: ansible
+spec:
+  replicas: {{ .Values.ansibleProd.replicas }}
+  selector:
+    matchLabels:
+      app: ansible
+  template:
+    metadata:
+      annotations:
+        sidecar.istio.io/proxyCPULimit: "1000m"
+        sidecar.istio.io/proxyCPU: "200m"
+        sidecar.istio.io/proxyMemory: "128Mi"
+        sidecar.istio.io/proxyMemoryLimit: "1Gi" 
+      labels:
+        app: ansible
+        version: 1.0.0
+    spec:
+      containers:
+      - command:
+        - supervisord
+        - -c
+        - /etc/supervisord.conf
+        env:
+        - name: KUBERNETES_CLUSTER_DOMAIN
+          value: {{ .Values.kubernetesClusterDomain }}
+        image: {{ .Values.ansibleProd.ansibleProd.image.repository }}:{{ .Values.ansibleProd.ansibleProd.image.tag
+          | default .Chart.AppVersion }}
+        imagePullPolicy: IfNotPresent
+        name: ansible-prod
+        ports:
+        - containerPort: 2022
+          name: sshport
+        resources:
+          requests:
+            cpu: 3m
+            memory: 128Mi
+          limits:
+            cpu: 100m	
+            memory: 1Gi
+        securityContext:
+          readOnlyRootFilesystem: true
+          runAsNonRoot: true
+          runAsUser: 10020
+        volumeMounts:
+        - mountPath: /tmp
+          name: tmp
+        - mountPath: /var/tmp
+          name: var
+        - mountPath: /usr/tmp
+          name: usr
+        - mountPath: /iact/ansible
+          name: ansible-data
+        - mountPath: /run
+          name: sshtest-run
+        - mountPath: /root/.ansible/tmp
+          name: root-ansible-tmp
+        - mountPath: /home/users/iact/.ansible/tmp
+          name: iact-ansible-tmp
+        - mountPath: /home/users/iact/.ssh
+          name: ssh
+          subPath: .ssh
+      dnsConfig:
+        options:
+        - name: ndots
+          value: "1"
+      imagePullSecrets:
+      - name: acrsecret2
+      restartPolicy: Always
+      volumes:
+      - name: ansible-data
+        persistentVolumeClaim:
+          claimName: pvc-ansible-data
+      - name: ssh
+        persistentVolumeClaim:
+          claimName: pvc-ansible-ssh
+      - emptyDir: {}
+        name: sshtest-run
+      - emptyDir: {}
+        name: tmp
+      - emptyDir: {}
+        name: usr
+      - emptyDir: {}
+        name: var
+      - emptyDir: {}
+        name: root-ansible-tmp
+      - emptyDir: {}
+        name: iact-ansible-tmp

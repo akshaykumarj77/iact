@@ -1,0 +1,242 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  annotations:
+    deployment.kubernetes.io/revision: "1"
+    meta.helm.sh/release-name: my-rundeck
+    meta.helm.sh/release-namespace: act-ns
+  labels:
+    app.kubernetes.io/instance: my-rundeck
+    app.kubernetes.io/name: rundeck
+  name: my-rundeck
+  namespace: act-ns
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/instance: my-rundeck
+      app.kubernetes.io/name: rundeck
+  template:
+    metadata:
+      annotations:
+        sidecar.istio.io/proxyCPULimit: "1000m"
+        sidecar.istio.io/proxyCPU: "200m"
+        sidecar.istio.io/proxyMemory: "128Mi"
+        sidecar.istio.io/proxyMemoryLimit: "1Gi" 
+      labels:
+        app.kubernetes.io/instance: my-rundeck
+        app.kubernetes.io/name: rundeck
+        app: rundeck
+        version: 1.0.0
+    spec:
+      securityContext:
+        fsGroup: 10015
+      containers:
+      - image: odakscore.azurecr.io/compliant/iona-nginx:latest
+        imagePullPolicy: Always
+        livenessProbe:
+          exec:
+            command:
+            - /bin/sh
+            - -c
+            - "[ -f /var/run/nginx.pid ] && ps -A | grep nginx"
+          initialDelaySeconds: 10
+          periodSeconds: 5
+        name: nginx
+        resources:
+          requests:
+            cpu: 100m
+            memory: 128Mi
+          limits:
+            cpu: 1000m
+            memory: 1Gi
+        ports:
+        - containerPort: 80
+          name: http
+          protocol: TCP
+            #readinessProbe:
+            #failureThreshold: 3
+            #httpGet:
+            #path: /
+            #port: 80
+            #scheme: HTTP
+            #periodSeconds: 5
+            #successThreshold: 1
+            #timeoutSeconds: 1
+        securityContext:
+          runAsNonRoot: true
+          runAsUser: 10014
+          runAsGroup: 10014
+          readOnlyRootFilesystem: true
+          allowPrivilegeEscalation: false
+          capabilities:
+            drop:
+              - ALL
+              - NET_RAW
+        volumeMounts:
+        - mountPath: /etc/nginx
+          name: nginx-config
+        - mountPath: /var/cache/nginx
+          name: cache-volume
+        - mountPath: /var/run
+          name: pid-volume
+      - command:
+        - /bin/sh
+        - -c
+        - echo admin:admin,user,admin,architect,deploy,build > /home/rundeck/server/config/realm.properties
+          && /home/rundeck/docker-lib/entry.sh
+        env:
+        - name: RUNDECK_GRAILS_URL
+          value: {{ .Values.rundeckurl }}
+        - name: RUNDECK_SERVER_FORWARDED
+          value: "true"
+        - name: RUNDECK_LOGGING_STRATEGY
+          value: CONSOLE
+        - name: RUNDECK_DATABASE_DRIVER
+          value: org.postgresql.Driver
+        - name: RUNDECK_DATABASE_USERNAME
+          value: iona_svc
+        - name: RUNDECK_DATABASE_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              key: POSTGRES-PASSWORD
+              name: {{ .Values.secretName}}
+        - name: RUNDECK_DATABASE_URL
+          value: jdbc:postgresql://postgres.datahub-ns.svc.cluster.local/rundeck?autoReconnect=true&useSSL=false
+        - name: RUNDECK_SECURITY_HTTPHEADERS_PROVIDER_CSP_ENABLED
+          value: "false"
+        - name: RUNDECK_SERVER_UUID
+          value: RANDOM
+        envFrom:
+        - configMapRef:
+            name: my-rundeck-environment-configmap
+        image: odakscore.azurecr.io/compliant/iona-rundeck:latest
+          # 6.0
+          # 8.0 with port
+        imagePullPolicy: Always
+        lifecycle:
+          postStart:
+            exec:
+              command: ["/bin/sh", "-c", "/home/rundeck/rundeck_projects/RESOURCES/postactivities.sh"]
+        securityContext:
+          runAsNonRoot: true
+            #runAsGroup: 10015
+          runAsUser: 10015
+          readOnlyRootFilesystem: true
+          allowPrivilegeEscalation: false
+      #  livenessProbe:
+      #    failureThreshold: 3
+      #    httpGet:
+      #      path: /rundeck/
+      #      port: 4440
+      #      scheme: HTTP
+      #    initialDelaySeconds: 120
+      #    periodSeconds: 120
+      #    successThreshold: 1
+      #    timeoutSeconds: 1
+        name: rundeck
+        ports:
+        - containerPort: 4440
+          name: rundeck
+          protocol: TCP
+     #   readinessProbe:
+#          failureThreshold: 3
+     #     httpGet:
+     #       path: /rundeck/
+     #       port: 4440
+     #       scheme: HTTP
+     #     initialDelaySeconds: 120
+#          periodSeconds: 5
+#          successThreshold: 1
+     #     timeoutSeconds: 120
+        resources:
+          requests:
+            cpu: 100m
+            memory: 128Mi
+          limits:
+            cpu: 1000m
+            memory: 1Gi
+        terminationMessagePath: /dev/termination-log
+        terminationMessagePolicy: File
+        volumeMounts:
+        - mountPath: /mnt/secrets-store
+          name: secrets-store-inline
+          readOnly: true
+        - mountPath: /home/rundeck/.ssh
+          name: ssh
+        - mountPath: /home/rundeck/server/data
+          name: data
+        - mountPath: /home/rundeck/var/logs/rundeck
+          name: logs
+        - mountPath: /home/rundeck/libext
+          name: rundeck-plgin
+        - mountPath: /home/rundeck/server/config
+          name: config
+        - mountPath: /tmp
+          name: rundeck-tmp
+        - mountPath: /home/rundeck/etc
+          name: rundeck-etc
+        - mountPath: /home/rundeck/repository
+          name: rundeck-repo
+        - mountPath: /home/rundeck/projects
+          name: projects
+        - mountPath: /home/rundeck/var
+          name: rundeck-var
+        - mountPath: /home/rundeck/server/sbin
+          name: rundeck-sbin
+      dnsConfig:
+        options:
+        - name: ndots
+          value: "1"
+      imagePullSecrets:
+      - name: acrsecret2
+      restartPolicy: Always
+      schedulerName: default-scheduler
+      serviceAccount: my-rundeck
+      serviceAccountName: my-rundeck
+      terminationGracePeriodSeconds: 30
+      volumes:
+      - csi:
+          driver: secrets-store.csi.k8s.io
+          readOnly: true
+          volumeAttributes:
+            secretProviderClass: {{ .Values.secretProviderClass }}
+        name: secrets-store-inline
+      - configMap:
+          defaultMode: 420
+          items:
+          - key: nginx.conf
+            path: nginx.conf
+          name: my-rundeck-nginx-configmap
+        name: nginx-config
+      - name: data
+        #  emptyDir: {}
+        persistentVolumeClaim:
+          claimName: pvc-rundeck-data
+      - name: logs
+        persistentVolumeClaim:
+          claimName: pvc-rundeck-logs
+      - name: rundeck-plgin
+        #emptyDir: {}
+        persistentVolumeClaim:
+          claimName: pvc-rundeck-plgin
+      - name: ssh
+        emptyDir: {}
+      - name: cache-volume
+        emptyDir: {}
+      - name: pid-volume
+        emptyDir: {}
+      - name: config
+        emptyDir: {}
+      - name: rundeck-tmp
+        emptyDir: {}
+      - name: rundeck-etc
+        emptyDir: {}
+      - name: rundeck-repo
+        emptyDir: {}
+      - name: projects
+        emptyDir: {}
+      - name: rundeck-var
+        emptyDir: {}
+      - name: rundeck-sbin
+        emptyDir: {}

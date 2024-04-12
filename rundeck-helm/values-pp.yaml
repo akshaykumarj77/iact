@@ -1,0 +1,55 @@
+kubernetesClusterDomain: cluster.local
+secretName: "isee-secret"
+secretProviderClass: "ionakv-managed"
+rundeckurl: "https://iona-preprod.odazprivatecloud.com/rundeck/"
+myRundeck:
+  nginx:
+    image:
+      repository: odakscore.azurecr.io/compliant/iona-nginx
+      tag: latest
+  replicas: 1
+  rundeck:
+    image:
+      repository: odakscore.azurecr.io/compliant/iona-rundeck
+      tag: latest
+myRundeckEnvironmentConfigmap:
+  rundeckGrailsUrl: https://iona-preprod.odazprivatecloud.com/rundeck
+  rundeckLoggingStrategy: CONSOLE
+  rundeckServerForwarded: "true"
+  rundeckcontextpath: "/rundeck/"
+myRundeckNginxConfigmap:
+  nginxConf: |-
+    events {
+      worker_connections  1024;
+    }
+
+    http {
+        server {
+            location /healthz {
+                return 204;
+                access_log off;
+            }
+            location /rundeck/ {
+                recursive_error_pages on;
+                client_max_body_size 50M; # upload archives (backup/restore)
+                proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+                proxy_set_header X-Forwarded-Proto $scheme;
+                proxy_set_header User-Agent $http_user_agent;
+                proxy_pass http://localhost:4440/rundeck/;
+            }
+        }
+    }
+pvc:
+  pvcRundeckData:
+    storageRequest: 10Gi
+  pvcRundeckLogs:
+    storageRequest: 10Gi
+  pvcRundeckPlgin:
+    storageRequest: 10Gi
+regCredSecret:
+  dockerconfigjson: ""
+rundeckHl:
+  ports:
+  - port: 80
+    targetPort: 4440
+  type: ClusterIP

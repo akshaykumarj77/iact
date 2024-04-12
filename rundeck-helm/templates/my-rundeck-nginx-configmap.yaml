@@ -1,0 +1,11 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: my-rundeck-nginx-configmap
+  labels:
+  {{- include "rundeck-helm.labels" . | nindent 4 }}
+  annotations:
+    meta.helm.sh/release-name: my-rundeck
+    meta.helm.sh/release-namespace: act-ns
+data:
+  nginx.conf: {{ .Values.myRundeckNginxConfigmap.nginxConf | quote }}

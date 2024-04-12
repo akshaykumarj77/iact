@@ -1,0 +1,19 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: my-rundeck-environment-configmap
+  labels:
+  {{- include "rundeck-helm.labels" . | nindent 4 }}
+  annotations:
+    meta.helm.sh/release-name: my-rundeck
+    meta.helm.sh/release-namespace: act-ns
+data:
+  RUNDECK_GRAILS_URL: {{ .Values.myRundeckEnvironmentConfigmap.rundeckGrailsUrl |
+    quote }}
+  RUNDECK_LOGGING_STRATEGY: {{ .Values.myRundeckEnvironmentConfigmap.rundeckLoggingStrategy
+    | quote }}
+  RUNDECK_SERVER_FORWARDED: {{ .Values.myRundeckEnvironmentConfigmap.rundeckServerForwarded
+    | quote }}
+  RUNDECK_SERVER_CONTEXTPATH: {{ .Values.myRundeckEnvironmentConfigmap.rundeckcontextpath
+    | quote }}
+

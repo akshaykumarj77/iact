@@ -1,0 +1,16 @@
+iactScriptfinder:
+  iactScriptfinder:
+    image:
+      repository: odakscore.azurecr.io/compliant/iona-scriptfinder-api
+      tag: "7.0"
+    resources:
+      limits:
+        cpu: "1"
+        memory: 900Mi
+      requests:
+        cpu: 500m
+        memory: 100Mi
+  replicas: 1
+kubernetesClusterDomain: cluster.local
+secretName: "isee-secret"
+secretProviderClass: "ionakv-managed"

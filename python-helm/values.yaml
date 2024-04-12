@@ -1,0 +1,15 @@
+hl:
+  ports:
+  - port: 2022
+    targetPort: 0
+  type: ClusterIP
+kubernetesClusterDomain: cluster.local
+pvc:
+  pvcIactScripts:
+    storageRequest: 10Gi
+python:
+  python:
+    image:
+      repository: odakscore.azurecr.io/compliant/iona-python
+      tag: latest
+  replicas: 1

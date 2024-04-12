@@ -1,0 +1,86 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: python
+  labels:
+    app: python
+spec:
+  replicas: {{ .Values.python.replicas }}
+  selector:
+    matchLabels:
+      app: python
+  template:
+    metadata:
+      annotations:
+        sidecar.istio.io/proxyCPULimit: "1000m"
+        sidecar.istio.io/proxyCPU: "200m"
+        sidecar.istio.io/proxyMemory: "128Mi"
+        sidecar.istio.io/proxyMemoryLimit: "1Gi" 
+      labels:
+        app: python
+        version: 1.0.0
+    spec:
+      containers:
+      - command:
+        - supervisord
+        - -c
+        - /etc/supervisord.conf
+        env:
+        - name: KUBERNETES_CLUSTER_DOMAIN
+          value: {{ .Values.kubernetesClusterDomain }}
+        image: {{ .Values.python.python.image.repository }}:{{ .Values.python.python.image.tag
+          | default .Chart.AppVersion }}
+        imagePullPolicy: IfNotPresent
+        name: python
+        ports:
+        - containerPort: 2022
+          name: sshport
+        resources:
+          requests:
+            cpu: 5m
+            memory: 100Mi
+          limits:
+            cpu: 1000m
+            memory: 1Gi
+        securityContext:
+          readOnlyRootFilesystem: true
+          runAsNonRoot: true
+          runAsUser: 10020
+        volumeMounts:
+        - mountPath: /tmp
+          name: tmp
+        - mountPath: /var/tmp
+          name: var
+        - mountPath: /usr/tmp
+          name: usr
+        - mountPath: /root
+          name: root
+        - mountPath: /run
+          name: python-sshtest-run
+        - mountPath: /iact/scripts
+          name: iact-scripts
+        - mountPath: /home/users/iact/.ssh
+          name: ssh
+          subPath: .ssh
+      dnsConfig:
+        options:
+        - name: ndots
+          value: "1"
+      restartPolicy: Always
+      volumes:
+      - name: ssh
+        persistentVolumeClaim:
+          claimName: pvc-iact-ssh
+      - name: iact-scripts
+        persistentVolumeClaim:
+          claimName: pvc-iact-scripts
+      - emptyDir: {}
+        name: tmp
+      - emptyDir: {}
+        name: var
+      - emptyDir: {}
+        name: usr
+      - emptyDir: {}
+        name: root
+      - emptyDir: {}
+        name: python-sshtest-run

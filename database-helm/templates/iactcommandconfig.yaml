@@ -1,0 +1,118 @@
+apiVersion: v1
+data:
+  command.yaml: "-- public.apps_master definition\n\n-- Drop table\n\n-- DROP TABLE
+    public.apps_master;\n\nDROP SEQUENCE iact_sequence\nCREATE SEQUENCE iact_sequence
+    \  start 1   increment 1;\n\nDROP SEQUENCE audit_id_sequence\nCREATE SEQUENCE
+    audit_id_seq start 1 increment 1;\n\nCREATE TABLE audit (\n    audit_id INTEGER
+    PRIMARY KEY,\n    incident_number VARCHAR(2000),\n    finding_parameters VARCHAR
+    ( 4000 ),\n    feature_conditions VARCHAR ( 4000 ),\n\tscript_parameters  VARCHAR
+    ( 4000 ),\n\tcreated_on TIMESTAMP NOT NULL,\n\tjob_id VARCHAR ( 500 ),\n\tjob_name
+    VARCHAR ( 1000 ),\n\texecution_id INTEGER,\n\terror_msg VARCHAR ( 4000 ),\n\tstatus
+    VARCHAR(1000),\n\tresponse_payload VARCHAR ( 4000 ),\n\tis_ticket BOOLEAN DEFAULT
+    FALSE,\n\tticket_action VARCHAR(100),\n\tend_time TIMESTAMP,\n\tticket_type VARCHAR(10),\n\treassignment_group
+    VARCHAR(500)\n);\n\ninsert into audit values (1,'123','fdsfd','sfsafs',''\n\nCREATE
+    TABLE snow_reassignment_gr (\n    usecase VARCHAR ( 2000 ),\n    assignment_gr
+    VARCHAR ( 1000 ),\n\tcreated_on TIMESTAMP NOT NULL,\n\tupdated_on TIMESTAMP NOT
+    NULL\n);\n\n\nCREATE TABLE public.apps_master (\n\tapp_id serial4 NOT NULL,\n\tapp_name
+    varchar NOT NULL,\n\tCONSTRAINT apps_master_pk PRIMARY KEY (app_id),\n\tCONSTRAINT
+    apps_master_un UNIQUE (app_name)\n);\n\n-- public.auth_token definition\n\n--
+    Drop table\n\n-- DROP TABLE public.auth_token;\n\nCREATE TABLE public.auth_token
+    (\n\t\"token\" varchar(2000) NULL,\n\tuser_name varchar(1000) NULL,\n\tduration
+    varchar(1000) NULL,\n\tcreated_on timestamp NOT NULL,\n\texpired_on timestamp
+    NOT NULL,\n\tid serial4 NOT NULL,\n\tupdated_on timestamp NULL\n);\n\n\n-- public.chaos_engine
+    definition\n\n-- Drop table\n\n-- DROP TABLE public.chaos_engine;\n\nCREATE TABLE
+    public.chaos_engine (\n\tid serial4 NOT NULL,\n\tengine_name varchar NOT NULL,\n\tjob_id
+    varchar NOT NULL,\n\tis_delete bool NOT NULL DEFAULT false,\n\tCONSTRAINT chaos_engine_pk
+    PRIMARY KEY (id)\n);\n\n\n-- public.executor_details definition\n\n-- Drop table\n\n--
+    DROP TABLE public.executor_details;\n\nCREATE TABLE public.executor_details (\n\tobject_id
+    int4 NOT NULL DEFAULT nextval('iact_sequence'::regclass),\n\texec_file_name varchar(1000)
+    NOT NULL,\n\texec_file_loc varchar(512) NOT NULL,\n\texec_method varchar(100)
+    NOT NULL,\n\tforce_update varchar(10) NULL,\n\tcreated_on timestamp NOT NULL,\n\tupdated_on
+    timestamp NOT NULL,\n\tCONSTRAINT executor_details_pkey PRIMARY KEY (object_id)\n);\n\n\n--
+    public.external_configs definition\n\n-- Drop table\n\n-- DROP TABLE public.external_configs;\n\nCREATE
+    TABLE public.external_configs (\n\tid serial4 NOT NULL,\n\tparam_name varchar
+    NOT NULL,\n\tparam_value varchar NOT NULL\n);\n\n\n-- public.group_app_map definition\n\n--
+    Drop table\n\n-- DROP TABLE public.group_app_map;\n\nCREATE TABLE public.group_app_map
+    (\n\tgroup_app_map_id serial4 NOT NULL,\n\tgroup_id int8 NOT NULL,\n\tapp_id int8
+    NOT NULL,\n\tCONSTRAINT group_app_map_pk PRIMARY KEY (group_app_map_id),\n\tCONSTRAINT
+    group_app_map_un UNIQUE (group_id, app_id)\n);\n\n\n-- public.\"groups\" definition\n\n--
+    Drop table\n\n-- DROP TABLE public.\"groups\";\n\nCREATE TABLE public.\"groups\"
+    (\n\tgroup_id serial4 NOT NULL,\n\tgroup_name varchar NOT NULL,\n\tgroup_description
+    varchar NULL,\n\tCONSTRAINT groups_pk PRIMARY KEY (group_id)\n);\n\n\n-- public.job_approval
+    definition\n\n-- Drop table\n\n-- DROP TABLE public.job_approval;\n\nCREATE TABLE
+    public.job_approval (\n\tid int4 NOT NULL,\n\tapprove_reject_time varchar(255)
+    NULL,\n\tapproved_reject_by varchar(255) NULL,\n\tjob_description varchar(255)
+    NULL,\n\tjob_instance_id int4 NULL,\n\tjob_parameters varchar(255) NULL,\n\tnext_job_name
+    varchar(255) NULL,\n\tnext_job_project_name varchar(255) NULL,\n\treason varchar(255)
+    NULL,\n\tstatus varchar(255) NULL,\n\tticket_id varchar(255) NULL,\n\tCONSTRAINT
+    job_approval_pkey PRIMARY KEY (id)\n);\n\n\n-- public.job_details definition\n\n--
+    Drop table\n\n-- DROP TABLE public.job_details;\n\nCREATE TABLE public.job_details
+    (\n\tjob_id varchar NULL,\n\tjob_name varchar NULL,\n\tjobdescription varchar
+    NULL,\n\tid serial4 NOT NULL,\n\tprojectname varchar NULL,\n\tcreated_on timestamp
+    NULL,\n\tpayload varchar(255) NULL,\n\tupdated_on timestamp NULL,\n\tapproval_status
+    varchar(255) NULL,\n\tapprover varchar(255) NULL,\n\tremarks varchar(255) NULL,\n\tis_delete
+    bool NOT NULL DEFAULT false,\n\tCONSTRAINT job_details_un UNIQUE (job_id)\n);\n\n\n--
+    public.job_run_status definition\n\n-- Drop table\n\n-- DROP TABLE public.job_run_status;\n\nCREATE
+    TABLE public.job_run_status (\n\tid serial4 NOT NULL,\n\tjob_id varchar NOT NULL,\n\thref
+    varchar NOT NULL,\n\tpermalink varchar NOT NULL,\n\tstatus varchar NOT NULL,\n\tproject
+    varchar NOT NULL,\n\tjob_name varchar NOT NULL,\n\tjob_description varchar NOT
+    NULL,\n\trun_id int4 NOT NULL,\n\tuser_name varchar NULL,\n\tstart_time timestamp
+    NULL,\n\tend_time timestamp NULL\n);\n\n\n-- public.rundeck_connection_details
+    definition\n\n-- Drop table\n\n-- DROP TABLE public.rundeck_connection_details;\n\nCREATE
+    TABLE public.rundeck_connection_details (\n\tid serial4 NOT NULL,\n\t\"server\"
+    varchar NULL,\n\tport varchar NULL,\n\tdatabase_name varchar NULL,\n\tuser_name
+    varchar NULL,\n\t\"password\" varchar NULL,\n\tssl bool NULL DEFAULT false,\n\taccess_token
+    varchar NULL,\n\tapi_base_url varchar NULL\n);\n\n\n-- public.ticket_closer definition\n\n--
+    Drop table\n\n-- DROP TABLE public.ticket_closer;\n\nCREATE TABLE public.ticket_closer
+    (\n\tid serial4 NOT NULL,\n\tticket_no varchar NOT NULL,\n\tusecase varchar NOT
+    NULL,\n\tclosed_by varchar NOT NULL,\n\tclose_at timestamp NOT NULL,\n\tCONSTRAINT
+    ticket_closer_pk PRIMARY KEY (id)\n);\n\n\n-- public.ticket_details definition\n\n--
+    Drop table\n\n-- DROP TABLE public.ticket_details;\n\nCREATE TABLE public.ticket_details
+    (\n\tid serial4 NOT NULL,\n\tticket_no varchar NOT NULL,\n\tticket_description
+    varchar NULL,\n\tapp_name varchar NOT NULL,\n\tusecase varchar NOT NULL,\n\tconfidence_score
+    int4 NOT NULL,\n\tstatus bool NOT NULL DEFAULT true,\n\tclosed_by varchar NULL,\n\tCONSTRAINT
+    ticket_details_pk PRIMARY KEY (id),\n\tCONSTRAINT ticket_details_un UNIQUE (ticket_no,
+    app_name, usecase)\n);\n\n\n-- public.usecase_master definition\n\n-- Drop table\n\n--
+    DROP TABLE public.usecase_master;\n\nCREATE TABLE public.usecase_master (\n\tid
+    serial4 NOT NULL,\n\tusecase_name varchar NOT NULL,\n\tCONSTRAINT usecase_master_pk
+    PRIMARY KEY (id),\n\tCONSTRAINT usecase_master_un UNIQUE (usecase_name)\n);\n\n\n--
+    public.user_group_map definition\n\n-- Drop table\n\n-- DROP TABLE public.user_group_map;\n\nCREATE
+    TABLE public.user_group_map (\n\tuser_group_map_id serial4 NOT NULL,\n\tuser_id
+    int8 NOT NULL,\n\tgroup_id int8 NOT NULL,\n\tCONSTRAINT user_group_map_pk PRIMARY
+    KEY (user_group_map_id),\n\tCONSTRAINT user_group_map_un UNIQUE (user_id, group_id)\n);\n\n\n--
+    public.user_job_map definition\n\n-- Drop table\n\n-- DROP TABLE public.user_job_map;\n\nCREATE
+    TABLE public.user_job_map (\n\tuser_job_map_id serial4 NOT NULL,\n\tproject_id
+    int8 NOT NULL,\n\tproject_name varchar NULL,\n\tjob_id int8 NOT NULL,\n\tjob_name
+    varchar NULL,\n\tuser_id int8 NULL,\n\tuser_group_map_id int4 NULL\n);\n\n\n--
+    public.users definition\n\n-- Drop table\n\n-- DROP TABLE public.users;\n\nCREATE
+    TABLE public.users (\n\tuser_id serial4 NOT NULL,\n\tuser_name varchar NOT NULL,\n\temail
+    varchar NOT NULL,\n\t\"password\" varchar NULL,\n\tis_active bool NOT NULL DEFAULT
+    true,\n\tCONSTRAINT users_pk PRIMARY KEY (user_id),\n\tCONSTRAINT users_un UNIQUE
+    (email)\n);\n\n\n-- public.chaos_engine_parameters definition\n\n-- Drop table\n\n--
+    DROP TABLE public.chaos_engine_parameters;\n\nCREATE TABLE public.chaos_engine_parameters
+    (\n\tid serial4 NOT NULL,\n\tchaos_engine_id int4 NOT NULL,\n\tparameter_name
+    varchar NOT NULL,\n\tdisplay_name varchar NULL,\n\tCONSTRAINT chaos_engine_parameters_pk
+    PRIMARY KEY (id),\n\tCONSTRAINT fknllmo4362o10vv4dpm0m4xxn8 FOREIGN KEY (chaos_engine_id)
+    REFERENCES public.chaos_engine(id)\n);\n\nINSERT INTO public.users (user_name,email,\"password\",is_active)
+    VALUES ('Souvik Chatterjee','souvik.c@hcl.com','ff7bd97b1a7789ddd2775122fd6817f3173672da9f802ceec57f284325bf589f',true);\n\t
+    \nINSERT INTO public.\"groups\" (group_name,group_description) VALUES ('Admin','This
+    is admin group. All users available in this group can have access to admin menu
+    and can assign groups to users and applications');\n\t \nINSERT INTO public.auth_token
+    (\"token\",user_name,duration,created_on,expired_on,updated_on) VALUES ('keVYATKmX1ll7Ayg1UJbXmuYjx3AP8Ue','IONA_ADMIN',NULL,'2022-01-27
+    00:00:04.419','2025-12-30 00:00:04.419',NULL);\n\t \nINSERT INTO public.user_group_map
+    (user_id,group_id) VALUES (1,1);\n\nINSERT INTO public.rundeck_connection_details
+    (\"server\",port,database_name,user_name,\"password\",ssl,access_token,api_base_url)
+    VALUES ('localhost','5432','rundeck','postgres','admin@123',false,'QNCqLXp3cDUxwvYauT40h5ZkBwsgAU2P','http://localhost:4440/api/40/');\n\t\n\nINSERT
+    INTO public.external_configs (param_name,param_value) VALUES ('OPAURLForPermission','http://localhost:7020/v1/data'),('Rundeck_User_For_Token','IONA_ADMIN');\n\ninsert
+    into executor_details(object_id, exec_file_name, exec_file_loc, exec_method, force_update,
+    created_on, updated_on) Values(nextval('iact_sequence'), 'root_drool', 'iona/iAct/ScriptFinder/decision-service.drl',
+    'drools','', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);\ninsert into executor_details(object_id,
+    exec_file_name, exec_file_loc, exec_method, force_update, created_on, updated_on)
+    Values(nextval('iact_sequence'), 'checkmk', 'iona/iAct/ScriptFinder/checkmk.drl',
+    'drools','', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);\n\ninsert into snow_reassignment_gr
+    ( usecase , assignment_gr , created_on, updated_on ) Values( 'decommission_host',
+    'Application' , CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);\n"
+kind: ConfigMap
+metadata:
+  name: iactcommandconfig
+  namespace: datahub-ns

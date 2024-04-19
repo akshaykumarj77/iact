@@ -1,0 +1,56 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: {{ include "topic-helm.fullname" . }}-ubuntu1
+  labels:
+     name: kafka-topic
+     app: kafka-topic
+     version: 1.0.0
+  annotations:
+     sidecar.istio.io/proxyCPULimit: "1000m"
+     sidecar.istio.io/proxyCPU: "200m"
+     sidecar.istio.io/proxyMemory: "128Mi"
+     sidecar.istio.io/proxyMemoryLimit: "1Gi" 
+spec:
+  containers:
+  - command:
+    - /bin/bash
+    - -c
+    - date; /configmap/kafka.sh
+    image: odakscore.azurecr.io/compliant/iona-ubuntu:latest
+    imagePullPolicy: IfNotPresent
+    name: ubuntu1
+    resources:
+      limits:
+        cpu: 1
+        memory: 200Mi
+      requests:
+        cpu: 65m
+        memory: 50Mi
+    securityContext:
+      readOnlyRootFilesystem: true
+      runAsNonRoot: true
+      runAsUser: 65534
+    volumeMounts:
+    - mountPath: /configmap
+      name: configmap
+  #  - mountPath: /configmap
+  #    name: kafka_jass
+  #    subPath: kafka_jass.conf
+  #  - mountPath: /configmap
+  #    name: configproperties
+  #    subPath: config.properties
+  restartPolicy: Never
+  volumes:
+  - configMap:
+      defaultMode: 511
+      name: topic-config
+    name: configmap
+  #- configMap:
+  #    defaultMode: 511
+  #    name: config
+  #  name: kafka_jass
+  #- configMap:
+  #    defaultMode: 511
+  #    name: config
+  #  name: configproperties

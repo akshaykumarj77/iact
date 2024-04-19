@@ -1,0 +1,24 @@
+kubernetesClusterDomain: cluster.local
+postgres:
+    image:
+      repository: odakscore.azurecr.io/compliant/iona-cronjob
+      tag: latest
+    resources:
+      limits:
+        cpu: 2m
+        memory: 70Mi
+      requests:
+        cpu: 1m
+        memory: 50Mi
+onfig:
+  runtimeConfigSh: |
+    #!/bin/ash
+    export PGPASSWORD='Abcd1234'
+    database="admindb"
+    
+    echo "Connecting to pgsql admindb database using adminuser"
+    psql -h postgres.datahub-ns.svc.cluster.local -p 5432 -U adminuser -d admindb -c "CREATE ROLE iona_svc LOGIN PASSWORD 'Abcd1234';"
+    psql -h postgres.datahub-ns.svc.cluster.local -p 5432 -U adminuser -d admindb -c "CREATE DATABASE grafanadb WITH OWNER = iona_svc;"
+    psql -h postgres.datahub-ns.svc.cluster.local -p 5432 -U adminuser -d admindb -c "CREATE DATABASE iact WITH OWNER = iona_svc;"
+    psql -h postgres.datahub-ns.svc.cluster.local -p 5432 -U adminuser -d admindb -c "CREATE DATABASE kyle WITH OWNER = iona_svc;"
+    psql -h postgres.datahub-ns.svc.cluster.local -p 5432 -U adminuser -d admindb -c "CREATE DATABASE rundeck WITH OWNER = iona_svc;"

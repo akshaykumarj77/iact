@@ -1,0 +1,8 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: topic-config
+  labels:
+  {{- include "topic-helm.labels" . | nindent 4 }}
+data:
+  kafka.sh: {{ .Values.config.kafkaSh | quote }}

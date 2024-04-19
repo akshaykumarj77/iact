@@ -1,0 +1,8 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: tableconfig
+  labels:
+  {{- include "database-helm.labels" . | nindent 4 }}
+data:
+  runtimeConfig.sh: {{ .Values.onfig.tableConfigSh | quote }}

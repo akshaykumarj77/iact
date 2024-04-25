@@ -74,14 +74,14 @@ diagnosticMode:
 ## @param image.debug Specify if debug values should be set
 ##
 image:
-        #registry: docker.io
-        #  repository: bitnami/zookeeper
-        #  tag: "3.8.1-debian-11-r15"
-        #  digest: ""
-  registry: odakscore.azurecr.io
-  repository: compliant/iona-zookeeper
-  tag: latest
+  registry: docker.io
+  repository: bitnami/zookeeper
+  tag: "3.8.1-debian-11-r15"
   digest: ""
+  # registry: odakscore.azurecr.io
+  # repository: compliant/iona-zookeeper
+  # tag: latest
+  # digest: ""
 
   ## Specify a imagePullPolicy
   ## Defaults to 'Always' if image tag is 'latest', else set to 'IfNotPresent'
@@ -243,7 +243,7 @@ args: []
 
 ## @param replicaCount Number of ZooKeeper nodes
 ##
-replicaCount: 3
+replicaCount: 1
 ## @param containerPorts.client ZooKeeper client container port
 ## @param containerPorts.tls ZooKeeper TLS container port
 ## @param containerPorts.follower ZooKeeper follower container port
@@ -347,7 +347,7 @@ containerSecurityContext:
   runAsUser: 1001
   runAsNonRoot: true
   allowPrivilegeEscalation: false
-  readOnlyRootFilesystem: true
+##  readOnlyRootFilesystem: true
 ## @param hostAliases ZooKeeper pods host aliases
 ## https://kubernetes.io/docs/concepts/services-networking/add-entries-to-pod-etc-hosts-with-host-aliases/
 ##

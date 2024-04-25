@@ -6,12 +6,12 @@ ansibleHl:
 ansibleProd:
   ansibleProd:
     image:
-      repository: odakscore.azurecr.io/compliant/iona-ansible
-      tag: latest
+      repository: "ionatestregistry.azurecr.io/ansible"
+      tag: "6.0"
   replicas: 1
 kubernetesClusterDomain: cluster.local
 pvc:
   pvcAnsibleData:
-    storageRequest: 50Gi
+    storageRequest: 5Gi
   pvcAnsibleSsh:
     storageRequest: 1Gi

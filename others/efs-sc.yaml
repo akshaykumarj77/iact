@@ -1,0 +1,10 @@
+apiVersion: storage.k8s.io/v1
+kind: StorageClass
+metadata: 
+  name: efs-test-sc
+provisioner: efs.csi.aws.com
+#volumeBindingMode: WaitForFirstConsumer 
+parameters:
+  directoryPerms: "700"
+  fileSystemId: "fs-07a841a9b44247592"
+  provisioningMode: "efs-ap"

@@ -15,7 +15,7 @@ global:
   ##   - myRegistryKeySecretName
   ##
   imagePullSecrets: []
-  storageClass: "iona-managed-csi"
+  storageClass: "ebs-sc"
 
 ## @section Common parameters
 ##
@@ -607,7 +607,7 @@ persistence:
   ##   set, choosing the default provisioner.  (gp2 on AWS, standard on
   ##   GKE, AWS & OpenStack)
   ##
-  storageClass: "iona-managed-csi"
+  storageClass: "ebs-sc"
   ## @param persistence.accessModes PVC Access modes
   ##
   accessModes:

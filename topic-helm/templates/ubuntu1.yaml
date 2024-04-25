@@ -17,7 +17,7 @@ spec:
     - /bin/bash
     - -c
     - date; /configmap/kafka.sh
-    image: odakscore.azurecr.io/compliant/iona-ubuntu:latest
+    image: "ionatestregistry.azurecr.io/ubuntu:3.0"
     imagePullPolicy: IfNotPresent
     name: ubuntu1
     resources:
@@ -41,6 +41,8 @@ spec:
   #    name: configproperties
   #    subPath: config.properties
   restartPolicy: Never
+  imagePullSecrets:
+  - name: acrsecret2
   volumes:
   - configMap:
       defaultMode: 511

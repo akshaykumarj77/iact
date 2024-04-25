@@ -6,6 +6,7 @@ metadata:
 spec:
   accessModes:
   - ReadWriteOnce
+  storageClassName: efs-test-sc
   resources:
     requests:
       storage: {{ .Values.pvc.pvcAnsibleData.storageRequest | quote }}

@@ -1,0 +1,289 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: pgsql-initdb-config
+data:
+  init.sql: |
+    DROP SEQUENCE iact_sequence
+    CREATE SEQUENCE iact_sequence   start 1   increment 1;
+
+    DROP SEQUENCE audit_id_sequence
+    CREATE SEQUENCE audit_id_seq start 1 increment 1;
+
+    CREATE TABLE audit (
+    audit_id INTEGER PRIMARY KEY,
+    incident_number VARCHAR(2000),
+    finding_parameters VARCHAR ( 4000 ),
+    feature_conditions VARCHAR ( 4000 ),
+              script_parameters  VARCHAR ( 4000 ),
+              created_on TIMESTAMP NOT NULL,
+              job_id VARCHAR ( 500 ),
+              job_name VARCHAR ( 1000 ),
+              execution_id INTEGER,
+              error_msg VARCHAR ( 4000 ),
+              status VARCHAR(1000),
+              response_payload VARCHAR ( 4000 ),
+              is_ticket BOOLEAN DEFAULT FALSE,
+              ticket_action VARCHAR(100),
+              end_time TIMESTAMP,
+              ticket_type VARCHAR(10),
+              reassignment_group VARCHAR(500));
+
+    CREATE TABLE snow_reassignment_gr (
+    usecase VARCHAR ( 2000 ),
+    assignment_gr VARCHAR ( 1000 ),
+              created_on TIMESTAMP NOT NULL,
+              updated_on TIMESTAMP NOT NULL);
+
+    CREATE TABLE public.apps_master (
+              app_id serial4 NOT NULL,
+              app_name varchar NOT NULL,
+              CONSTRAINT apps_master_pk PRIMARY KEY (app_id),
+              CONSTRAINT apps_master_un UNIQUE (app_name));
+
+    -- public.auth_token definition
+    -- Drop table
+    -- DROP TABLE public.auth_token;
+
+    CREATE TABLE public.auth_token (
+              "token" varchar(2000) NULL,
+              user_name varchar(1000) NULL,
+              duration varchar(1000) NULL,
+              created_on timestamp NOT NULL,
+              expired_on timestamp NOT NULL,
+              id serial4 NOT NULL,
+              updated_on timestamp NULL);
+
+    -- public.chaos_engine definition
+    -- Drop table
+    -- DROP TABLE public.chaos_engine;
+
+    CREATE TABLE public.chaos_engine (
+              id serial4 NOT NULL,
+              engine_name varchar NOT NULL,
+              job_id varchar NOT NULL,
+              is_delete bool NOT NULL DEFAULT false,
+              CONSTRAINT chaos_engine_pk PRIMARY KEY (id));
+
+    -- public.executor_details definition
+    -- Drop table
+    -- DROP TABLE public.executor_details;
+
+    CREATE TABLE public.executor_details (
+              object_id int4 NOT NULL DEFAULT nextval('iact_sequence'::regclass),
+              exec_file_name varchar(1000) NOT NULL,
+              exec_file_loc varchar(512) NOT NULL,
+              exec_method varchar(100) NOT NULL,
+              force_update varchar(10) NULL,
+              created_on timestamp NOT NULL,
+              updated_on timestamp NOT NULL,
+              CONSTRAINT executor_details_pkey PRIMARY KEY (object_id));
+
+    -- public.external_configs definition
+    -- Drop table
+    -- DROP TABLE public.external_configs;
+
+    CREATE TABLE public.external_configs (
+              id serial4 NOT NULL,
+              param_name varchar NOT NULL,
+              param_value varchar NOT NULL);
+
+
+    -- public.group_app_map definition
+    -- Drop table
+    -- DROP TABLE public.group_app_map;
+
+    CREATE TABLE public.group_app_map (
+              group_app_map_id serial4 NOT NULL,
+              group_id int8 NOT NULL,
+              app_id int8 NOT NULL,
+              CONSTRAINT group_app_map_pk PRIMARY KEY (group_app_map_id),
+              CONSTRAINT group_app_map_un UNIQUE (group_id, app_id));
+
+
+    -- public."groups" definition
+    -- Drop table
+    -- DROP TABLE public."groups";
+
+    CREATE TABLE public."groups" (
+              group_id serial4 NOT NULL,
+              group_name varchar NOT NULL,
+              group_description varchar NULL,
+              CONSTRAINT groups_pk PRIMARY KEY (group_id));
+
+    -- public.job_approval definition
+    -- Drop table
+    -- DROP TABLE public.job_approval;
+
+    CREATE TABLE public.job_approval (
+              id int4 NOT NULL,
+              approve_reject_time varchar(255) NULL,
+              approved_reject_by varchar(255) NULL,
+              job_description varchar(255) NULL,
+              job_instance_id int4 NULL,
+              job_parameters varchar(255) NULL,
+              next_job_name varchar(255) NULL,
+              next_job_project_name varchar(255) NULL,
+              reason varchar(255) NULL,
+              status varchar(255) NULL,
+              ticket_id varchar(255) NULL,
+              CONSTRAINT job_approval_pkey PRIMARY KEY (id));
+
+    -- public.job_details definition
+    -- Drop table
+    -- DROP TABLE public.job_details;
+
+    CREATE TABLE public.job_details (
+              job_id varchar NULL,
+              job_name varchar NULL,
+              jobdescription varchar NULL,
+              id serial4 NOT NULL,
+              projectname varchar NULL,
+              created_on timestamp NULL,
+              payload varchar(255) NULL,
+              updated_on timestamp NULL,
+              approval_status varchar(255) NULL,
+              approver varchar(255) NULL,
+              remarks varchar(255) NULL,
+              is_delete bool NOT NULL DEFAULT false,
+              CONSTRAINT job_details_un UNIQUE (job_id));
+
+
+    -- public.job_run_status definition
+    -- Drop table
+    -- DROP TABLE public.job_run_status;
+
+    CREATE TABLE public.job_run_status (
+              id serial4 NOT NULL,
+              job_id varchar NOT NULL,
+              href varchar NOT NULL,
+              permalink varchar NOT NULL,
+              status varchar NOT NULL,
+              project varchar NOT NULL,
+              job_name varchar NOT NULL,
+              job_description varchar NOT NULL,
+              run_id int4 NOT NULL,
+              user_name varchar NULL,
+              start_time timestamp NULL,
+              end_time timestamp NULL);
+
+    -- public.rundeck_connection_details definition
+    -- Drop table
+    -- DROP TABLE public.rundeck_connection_details;
+
+    CREATE TABLE public.rundeck_connection_details (
+              id serial4 NOT NULL,
+              "server" varchar NULL,
+              port varchar NULL,
+              database_name varchar NULL,
+              user_name varchar NULL,
+              "password" varchar NULL,
+              ssl bool NULL DEFAULT false,
+              access_token varchar NULL,
+              api_base_url varchar NULL);
+
+
+    -- public.ticket_closer definition
+    -- Drop table
+    -- DROP TABLE public.ticket_closer;
+
+    CREATE TABLE public.ticket_closer (
+              id serial4 NOT NULL,
+              ticket_no varchar NOT NULL,
+              usecase varchar NOT NULL,
+              closed_by varchar NOT NULL,
+              close_at timestamp NOT NULL,
+              CONSTRAINT ticket_closer_pk PRIMARY KEY (id));
+
+    -- public.ticket_details definition
+    -- Drop table
+    -- DROP TABLE public.ticket_details;
+
+    CREATE TABLE public.ticket_details (
+              id serial4 NOT NULL,
+              ticket_no varchar NOT NULL,
+              ticket_description varchar NULL,
+              app_name varchar NOT NULL,
+              usecase varchar NOT NULL,
+              confidence_score int4 NOT NULL,
+              status bool NOT NULL DEFAULT true,
+              closed_by varchar NULL,
+              CONSTRAINT ticket_details_pk PRIMARY KEY (id),
+              CONSTRAINT ticket_details_un UNIQUE (ticket_no, app_name, usecase));
+
+    -- public.usecase_master definition
+    -- Drop table
+    -- DROP TABLE public.usecase_master;
+
+    CREATE TABLE public.usecase_master (
+              id serial4 NOT NULL,
+              usecase_name varchar NOT NULL,
+              CONSTRAINT usecase_master_pk PRIMARY KEY (id),
+              CONSTRAINT usecase_master_un UNIQUE (usecase_name));
+
+    -- public.user_group_map definition
+    -- Drop table
+    -- DROP TABLE public.user_group_map;
+
+    CREATE TABLE public.user_group_map (
+              user_group_map_id serial4 NOT NULL,
+              user_id int8 NOT NULL,
+              group_id int8 NOT NULL,
+              CONSTRAINT user_group_map_pk PRIMARY KEY (user_group_map_id),
+              CONSTRAINT user_group_map_un UNIQUE (user_id, group_id));
+
+    -- public.user_job_map definition
+    -- Drop table
+    -- DROP TABLE public.user_job_map;
+
+    CREATE TABLE public.user_job_map (
+              user_job_map_id serial4 NOT NULL,
+              project_id int8 NOT NULL,
+              project_name varchar NULL,
+              job_id int8 NOT NULL,
+              job_name varchar NULL,
+              user_id int8 NULL,
+              user_group_map_id int4 NULL);
+
+    -- public.users definition
+    -- Drop table
+    -- DROP TABLE public.users;
+
+    CREATE TABLE public.users (
+              user_id serial4 NOT NULL,
+              user_name varchar NOT NULL,
+              email varchar NOT NULL,
+              "password" varchar NULL,
+              is_active bool NOT NULL DEFAULT true,
+              CONSTRAINT users_pk PRIMARY KEY (user_id),
+              CONSTRAINT users_un UNIQUE (email));
+
+    -- public.chaos_engine_parameters definition
+    -- Drop table
+    -- DROP TABLE public.chaos_engine_parameters;
+
+    CREATE TABLE public.chaos_engine_parameters (
+              id serial4 NOT NULL,
+              chaos_engine_id int4 NOT NULL,
+              parameter_name varchar NOT NULL,
+              display_name varchar NULL,
+              CONSTRAINT chaos_engine_parameters_pk PRIMARY KEY (id),
+              CONSTRAINT fknllmo4362o10vv4dpm0m4xxn8 FOREIGN KEY (chaos_engine_id) REFERENCES public.chaos_engine(id));
+
+    INSERT INTO public.users (user_name,email,"password",is_active) VALUES ('Souvik Chatterjee','souvik.c@hcl.com','ff7bd97b1a7789ddd2775122fd6817f3173672da9f802ceec57f284325bf589f',true);
+              
+    INSERT INTO public."groups" (group_name,group_description) VALUES ('Admin','This is admin group. All users available in this group can have access to admin menu and can assign groups to users and applications');
+              
+    INSERT INTO public.auth_token ("token",user_name,duration,created_on,expired_on,updated_on) VALUES ('keVYATKmX1ll7Ayg1UJbXmuYjx3AP8Ue','IONA_ADMIN',NULL,'2022-01-27 00:00:04.419','2025-12-30 00:00:04.419',NULL);
+              
+    INSERT INTO public.user_group_map (user_id,group_id) VALUES (1,1);
+
+    INSERT INTO public.rundeck_connection_details ("server",port,database_name,user_name,"password",ssl,access_token,api_base_url) VALUES ('localhost','5432','rundeck','postgres','admin@123',false,'QNCqLXp3cDUxwvYauT40h5ZkBwsgAU2P','http://localhost:4440/api/40/');
+              
+    INSERT INTO public.external_configs (param_name,param_value) VALUES ('OPAURLForPermission','http://localhost:7020/v1/data'),('Rundeck_User_For_Token','IONA_ADMIN');
+
+    insert into executor_details(object_id, exec_file_name, exec_file_loc, exec_method, force_update, created_on, updated_on) Values(nextval('iact_sequence'), 'root_drool', 'iona/iAct/ScriptFinder/decision-service.drl', 'drools','', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
+	
+    insert into executor_details(object_id, exec_file_name, exec_file_loc, exec_method, force_update, created_on, updated_on) Values(nextval('iact_sequence'), 'checkmk', 'iona/iAct/ScriptFinder/checkmk.drl', 'drools','', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
+
+    insert into snow_reassignment_gr ( usecase , assignment_gr , created_on, updated_on ) Values( 'decommission_host', 'Application' , CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);

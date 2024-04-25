@@ -3,8 +3,8 @@ snowIactMapper:
   replicas: 1
   snowIactMapper:
     image:
-      repository: odakscore.azurecr.io/compliant/iona-snowmapper-api
-      tag: "3.0"
+      repository: "ionatestregistry.azurecr.io/snow-iact-mapper"
+      tag: "33.0"
     resources:
       limits:
         cpu: "1"
@@ -12,5 +12,5 @@ snowIactMapper:
       requests:
         cpu: 500m
         memory: 100Mi
-secretName: "isee-secret"
-secretProviderClass: "ionakv-managed"
+secretName: "mysecret01"
+secretProviderClass: "aws-secrets"

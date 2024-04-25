@@ -1,8 +1,8 @@
 iactCommandExecutors:
   iactCommandExecutors:
     image:
-      repository: odakscore.azurecr.io/compliant/iona-commandexecutor-api
-      tag: "2.0"
+      repository: "ionatestregistry.azurecr.io/iact-command-executors"
+      tag: "7.0"
     resources:
       limits:
         cpu: "1"
@@ -12,6 +12,6 @@ iactCommandExecutors:
         memory: 50Mi
   replicas: 1
 kubernetesClusterDomain: cluster.local
-secretName: "isee-secret"
-secretProviderClass: "ionakv-managed"
+secretName: "mysecret01"
+secretProviderClass: "aws-secrets"
 rundeckurl: "https://iona-preprod.odazprivatecloud.com/api/21/job/<job_id>/run"

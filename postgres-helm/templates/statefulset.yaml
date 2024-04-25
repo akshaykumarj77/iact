@@ -1,0 +1,86 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: postgres
+  labels:
+    app: postgres
+spec:
+  serviceName: postgres
+  replicas: 1
+  selector:
+    matchLabels:
+      app: postgres
+  template:
+    metadata:
+     # annotations:
+     #   sidecar.istio.io/proxyCPULimit: "1000m"
+     #   sidecar.istio.io/proxyCPU: "200m"
+     #   sidecar.istio.io/proxyMemory: "128Mi"
+     #   sidecar.istio.io/proxyMemoryLimit: "1Gi" 
+      labels:
+        app: postgres
+        version: 1.0.0
+    spec:
+      securityContext:
+        runAsUser: 70
+        fsGroup: 70
+        runAsNonRoot: true
+      containers:
+      - name: postgres
+        image: {{ .Values.postgres.postgres.image.repository }}:{{
+          .Values.postgres.postgres.image.tag | default .Chart.AppVersion
+          }}
+        resources: {{- toYaml .Values.postgres.postgres.resources
+          | nindent 10 }}
+        securityContext:
+          readOnlyRootFilesystem: true
+        env:
+        - name: POSTGRES_DB
+          value: "admindb"
+        - name: POSTGRES_USER
+          valueFrom:
+            secretKeyRef:
+              key: POSTGRES-USERNAME
+              name: {{ .Values.secretName}}
+        - name: POSTGRES_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              key: POSTGRES-PASSWORD
+              name: {{ .Values.secretName}}
+        - name: PGDATA
+          value: /var/lib/postgresql/data/pgdata
+        ports:
+          - containerPort: 5432
+            name: pgdb
+        volumeMounts:
+        - name: pgdb
+          mountPath: /var/lib/postgresql/data
+        - name: tmp
+          mountPath: /tmp
+        - name: run
+          mountPath: /var/run/postgresql
+        - mountPath: /mnt/secrets-store
+          name: secrets-store-inline
+          readOnly: true
+      imagePullSecrets:
+      - name: acrsecret2
+      volumes:
+      - csi:
+          driver: secrets-store.csi.k8s.io
+          readOnly: true
+          volumeAttributes:
+            secretProviderClass: {{ .Values.secretProviderClass }}
+        name: secrets-store-inline
+      - name: tmp
+        emptyDir: {}
+      - name: run
+        emptyDir: {}
+  volumeClaimTemplates:
+  - metadata:
+      name: pgdb
+    spec:
+      accessModes: [ "ReadWriteOnce" ]
+      storageClassName: ebs-sc
+      resources:
+        requests:
+          storage: 20Gi

@@ -32,7 +32,7 @@ spec:
       securityContext:
         fsGroup: 10015
       containers:
-      - image: odakscore.azurecr.io/compliant/iona-nginx:latest
+      - image: ionatestregistry.azurecr.io/nginx:1.0
         imagePullPolicy: Always
         livenessProbe:
           exec:
@@ -110,7 +110,7 @@ spec:
         envFrom:
         - configMapRef:
             name: my-rundeck-environment-configmap
-        image: odakscore.azurecr.io/compliant/iona-rundeck:latest
+        image: ionatestregistry.azurecr.io/rundeck:14.0
           # 6.0
           # 8.0 with port
         imagePullPolicy: Always
@@ -192,8 +192,8 @@ spec:
       - name: acrsecret2
       restartPolicy: Always
       schedulerName: default-scheduler
-      serviceAccount: my-rundeck
-      serviceAccountName: my-rundeck
+      serviceAccount: {{ .Values.serviceAccountName }}
+      serviceAccountName: {{ .Values.serviceAccountName }}
       terminationGracePeriodSeconds: 30
       volumes:
       - csi:

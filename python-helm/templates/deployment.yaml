@@ -67,6 +67,8 @@ spec:
         - name: ndots
           value: "1"
       restartPolicy: Always
+      imagePullSecrets:
+      - name: acrsecret2
       volumes:
       - name: ssh
         persistentVolumeClaim:

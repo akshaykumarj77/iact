@@ -75,6 +75,8 @@ spec:
         fsGroup: 1000
         runAsNonRoot: true
         runAsUser: 1000
+      imagePullSecrets:
+      - name: acrsecret2
       volumes:
       - csi:
           driver: secrets-store.csi.k8s.io

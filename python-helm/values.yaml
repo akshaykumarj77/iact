@@ -10,6 +10,6 @@ pvc:
 python:
   python:
     image:
-      repository: odakscore.azurecr.io/compliant/iona-python
-      tag: latest
+      repository: "ionatestregistry.azurecr.io/python"
+      tag: "7.0"
   replicas: 1

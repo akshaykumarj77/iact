@@ -18,7 +18,6 @@ onfig:
     
     echo "Connecting to pgsql admindb database using adminuser"
     psql -h postgres.datahub-ns.svc.cluster.local -p 5432 -U adminuser -d admindb -c "CREATE ROLE iona_svc LOGIN PASSWORD 'Abcd1234';"
-    psql -h postgres.datahub-ns.svc.cluster.local -p 5432 -U adminuser -d admindb -c "CREATE DATABASE grafanadb WITH OWNER = iona_svc;"
     psql -h postgres.datahub-ns.svc.cluster.local -p 5432 -U adminuser -d admindb -c "CREATE DATABASE iact WITH OWNER = iona_svc;"
-    psql -h postgres.datahub-ns.svc.cluster.local -p 5432 -U adminuser -d admindb -c "CREATE DATABASE kyle WITH OWNER = iona_svc;"
     psql -h postgres.datahub-ns.svc.cluster.local -p 5432 -U adminuser -d admindb -c "CREATE DATABASE rundeck WITH OWNER = iona_svc;"
+    psql -h postgres.datahub-ns.svc.cluster.local -p 5432 -U iona_svc -d iact -f /database/iact.sql

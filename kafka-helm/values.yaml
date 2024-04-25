@@ -75,13 +75,13 @@ diagnosticMode:
 ## @param image.debug Specify if debug values should be set
 ##
 image:
-        #registry: docker.io
-        #repository: bitnami/kafka
-        #  tag: 3.4.0-debian-11-r15
+  registry: docker.io
+  repository: bitnami/kafka
+  tag: 3.4.0-debian-11-r15
         #  digest: ""
-  registry: odakscore.azurecr.io
-  repository: compliant/iona-bitnami-kafka
-  tag: latest
+  # registry: odakscore.azurecr.io
+  # repository: compliant/iona-bitnami-kafka
+  # tag: latest
   digest: ""
   ## Specify a imagePullPolicy
   ## Defaults to 'Always' if image tag is 'latest', else set to 'IfNotPresent'
@@ -556,7 +556,7 @@ containerSecurityContext:
   runAsUser: 1001
   runAsNonRoot: true
   allowPrivilegeEscalation: false
-  readOnlyRootFilesystem: true
+##  readOnlyRootFilesystem: true
 ## @param hostAliases Kafka pods host aliases
 ## https://kubernetes.io/docs/concepts/services-networking/add-entries-to-pod-etc-hosts-with-host-aliases/
 ##

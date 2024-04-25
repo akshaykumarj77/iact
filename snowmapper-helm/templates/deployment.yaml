@@ -23,6 +23,7 @@ spec:
         version: 1.0.0
       {{- include "snowmapper.selectorLabels" . | nindent 8 }}
     spec:
+      serviceAccountName: iona-demo-sa
       containers:
       - env:
         - name: db_user

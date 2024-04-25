@@ -25,6 +25,7 @@ spec:
         runAsUser: 70
         fsGroup: 70
         runAsNonRoot: true
+      serviceAccountName: iona-demo-sa
       containers:
       - name: postgres
         image: {{ .Values.postgres.postgres.image.repository }}:{{

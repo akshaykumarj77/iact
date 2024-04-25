@@ -21,6 +21,7 @@ spec:
         app: iact-command-executors
         version: 1.0.0
     spec:
+      serviceAccountName: iona-demo-sa
       containers:
       - env:
         - name: db_user

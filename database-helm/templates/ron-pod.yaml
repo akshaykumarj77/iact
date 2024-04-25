@@ -4,11 +4,6 @@ metadata:
   name: {{ include "database-helm.fullname" . }}-ron-pod
   labels:
   {{- include "database-helm.labels" . | nindent 4 }}
-  annotations:
-     sidecar.istio.io/proxyCPULimit: "1000m"
-     sidecar.istio.io/proxyCPU: "200m"
-     sidecar.istio.io/proxyMemory: "128Mi"
-     sidecar.istio.io/proxyMemoryLimit: "1Gi" 
 spec:
   containers:
   - command:
@@ -29,8 +24,8 @@ spec:
     volumeMounts:
     - mountPath: /configmap
       name: configmap
-    - mountPath: /docker-entrypoint-initdb.d
-      name: pgsql-initdb
+    - mountPath: /database
+      name: iact-script
 #    - mountPath: /configmap
 #      name: tableconfig
 #    - mountPath: /configmap
@@ -45,13 +40,5 @@ spec:
     name: configmap
   - configMap:
       defaultMode: 511
-      name: pgsql-initdb-config
-    name: pgsql-initdb
-#  - configMap:
-#      defaultMode: 511
-#      name: tableconfig
-#    name: tableconfig
-#  - configMap:
-#      defaultMode: 511
-#      name: iactcommandconfig
-#    name: iact
+      name: iact-script
+    name: iact-script

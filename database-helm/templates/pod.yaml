@@ -26,10 +26,6 @@ spec:
       name: configmap
     - mountPath: /database
       name: iact-script
-#    - mountPath: /configmap
-#      name: tableconfig
-#    - mountPath: /configmap
-#      name: iact
   restartPolicy: Always
   imagePullSecrets:
   - name: acrsecret2

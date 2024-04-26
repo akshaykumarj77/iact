@@ -2,6 +2,7 @@ kubernetesClusterDomain: cluster.local
 secretName: "mysecret01"
 secretProviderClass: "aws-secrets"
 serviceAccountName: "iona-demo-sa"
+storageClassName: ebs-sc
 rundeckurl: "https://iona-preprod.odazprivatecloud.com/rundeck/"
 myRundeck:
   nginx:

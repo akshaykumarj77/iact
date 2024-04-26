@@ -3,11 +3,11 @@ config:
     #!/bin/bash
     # kafka_2.13-3.4.0
     # export KAFKA_OPTS="-Djava.security.auth.login.config=/tmp/kafka_jass.conf"
-#    /tmp/kafka_2.13-3.4.0/bin/kafka-topics.sh --create --bootstrap-server=cp-kafka.core-ns.svc.cluster.local:9092 --topic alerttopic --partitions 3 --replication-factor 1
-#    /tmp/kafka_2.13-3.4.0/bin/kafka-topics.sh --create --bootstrap-server=cp-kafka.core-ns.svc.cluster.local:9092 --topic alertprocessedtopic  --partitions 3 --replication-factor 1
-#    /tmp/kafka_2.13-3.4.0/bin/kafka-topics.sh --create --bootstrap-server=cp-kafka.core-ns.svc.cluster.local:9092 --topic glpitopic  --partitions 3 --replication-factor 1
-#    /tmp/kafka_2.13-3.4.0/bin/kafka-topics.sh --create --bootstrap-server=cp-kafka.core-ns.svc.cluster.local:9092 --topic resetalerttopic  --partitions 3 --replication-factor 1
-#    /tmp/kafka_2.13-3.4.0/bin/kafka-topics.sh --create --bootstrap-server=cp-kafka.core-ns.svc.cluster.local:9092 --topic resetalerttopicop  --partitions 3 --replication-factor 1
+    #/tmp/kafka_2.13-3.4.0/bin/kafka-topics.sh --create --bootstrap-server=cp-kafka.core-ns.svc.cluster.local:9092 --topic alerttopic --partitions 3 --replication-factor 1
+    #/tmp/kafka_2.13-3.4.0/bin/kafka-topics.sh --create --bootstrap-server=cp-kafka.core-ns.svc.cluster.local:9092 --topic alertprocessedtopic  --partitions 3 --replication-factor 1
+    #/tmp/kafka_2.13-3.4.0/bin/kafka-topics.sh --create --bootstrap-server=cp-kafka.core-ns.svc.cluster.local:9092 --topic glpitopic  --partitions 3 --replication-factor 1
+    #/tmp/kafka_2.13-3.4.0/bin/kafka-topics.sh --create --bootstrap-server=cp-kafka.core-ns.svc.cluster.local:9092 --topic resetalerttopic  --partitions 3 --replication-factor 1
+    #/tmp/kafka_2.13-3.4.0/bin/kafka-topics.sh --create --bootstrap-server=cp-kafka.core-ns.svc.cluster.local:9092 --topic resetalerttopicop  --partitions 3 --replication-factor 1
     /tmp/kafka_2.13-3.4.0/bin/kafka-topics.sh --create --bootstrap-server=cp-kafka.core-ns.svc.cluster.local:9092 --topic rundecktopic  --partitions 3 --replication-factor 1
     /tmp/kafka_2.13-3.4.0/bin/kafka-topics.sh --create --bootstrap-server=cp-kafka.core-ns.svc.cluster.local:9092 --topic rundecktopicop  --partitions 3 --replication-factor 1
     /tmp/kafka_2.13-3.4.0/bin/kafka-topics.sh --create --bootstrap-server=cp-kafka.core-ns.svc.cluster.local:9092 --topic scripttopic  --partitions 3 --replication-factor 1

@@ -3,6 +3,7 @@ hl:
   - port: 2022
     targetPort: 0
   type: ClusterIP
+storageClassName: ebs-sc
 kubernetesClusterDomain: cluster.local
 pvc:
   pvcIactScripts:

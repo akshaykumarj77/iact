@@ -4,11 +4,11 @@ metadata:
   name: iact-script
 data:
   iact.sql: |
-    DROP SEQUENCE iact_sequence
-    CREATE SEQUENCE iact_sequence   start 1   increment 1;
+    DROP SEQUENCE iact_sequence;
+    CREATE SEQUENCE iact_sequence INCREMENT 1 START 1;
 
-    DROP SEQUENCE audit_id_sequence
-    CREATE SEQUENCE audit_id_seq start 1 increment 1;
+    DROP SEQUENCE audit_id_sequence;
+    CREATE SEQUENCE audit_id_seq INCREMENT 1 START 1;
 
     CREATE TABLE audit (
     audit_id INTEGER PRIMARY KEY,

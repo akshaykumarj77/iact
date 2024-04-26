@@ -3,6 +3,7 @@ ansibleHl:
   - port: 2022
     targetPort: 0
   type: ClusterIP
+storageClassName: ebs-sc
 ansibleProd:
   ansibleProd:
     image:

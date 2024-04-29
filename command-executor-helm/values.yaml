@@ -2,7 +2,7 @@ iactCommandExecutors:
   iactCommandExecutors:
     image:
       repository: "ionatestregistry.azurecr.io/iact-command-executors"
-      tag: "7.0"
+      tag: "6.0"
     resources:
       limits:
         cpu: "1"
@@ -15,3 +15,6 @@ kubernetesClusterDomain: cluster.local
 secretName: "mysecret01"
 secretProviderClass: "aws-secrets"
 rundeckurl: "https://iona-preprod.odazprivatecloud.com/api/21/job/<job_id>/run"
+rundeck_user: "admin"
+db_url: "jdbc:postgresql://postgres.datahub-ns.svc.cluster.local:5432/iact"
+alertmanagerurl: "http://alertmanager-headless.observe-ns.svc.cluster.local:9093/api/v1/alerts"

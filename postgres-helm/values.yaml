@@ -19,3 +19,4 @@ postgres:
 secretName: "mysecret01"
 keyVaultName: ""
 secretProviderClass: "aws-secrets"
+appName: "postgres"

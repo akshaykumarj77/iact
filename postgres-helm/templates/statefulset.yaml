@@ -1,15 +1,15 @@
 apiVersion: apps/v1
 kind: StatefulSet
 metadata:
-  name: postgres
+  name: {{ .Values.appName }}
   labels:
-    app: postgres
+    app: {{ .Values.appName }}
 spec:
-  serviceName: postgres
+  serviceName: {{ .Values.appName }}
   replicas: 1
   selector:
     matchLabels:
-      app: postgres
+      app: {{ .Values.appName }}
   template:
     metadata:
      # annotations:
@@ -27,7 +27,7 @@ spec:
         runAsNonRoot: true
       serviceAccountName: iona-demo-sa
       containers:
-      - name: postgres
+      - name: {{ .Values.appName }}
         image: {{ .Values.postgres.postgres.image.repository }}:{{
           .Values.postgres.postgres.image.tag | default .Chart.AppVersion
           }}

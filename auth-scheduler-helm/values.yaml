@@ -1,0 +1,7 @@
+imageName: "ionatestregistry.azurecr.io/iact-auth-token-scheduler:1.0"
+keyvault_enabled: "true"
+db_url: "jdbc:postgresql://postgres.datahub-ns.svc.cluster.local:5432/iact"
+rundeck_url: "https://process-books.dna4.hclets.com"
+alertmanagerurl: "http://alertmanager-hl.observe-ns.svc.cluster.local:9093/api/v1/alerts"
+secretName: "mysecret01"
+secretProviderClass: "aws-secrets"

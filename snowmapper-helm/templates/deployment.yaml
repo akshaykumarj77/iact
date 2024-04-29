@@ -33,15 +33,15 @@ spec:
             secretKeyRef:
               key: POSTGRES-PASSWORD
               name: {{ .Values.secretName}}
-        - name: storagekey
+        - name: acckey
           valueFrom:
             secretKeyRef:
               key: STORAGE-ACCESS-KEY
               name: {{ .Values.secretName}}
-        - name: storageaccountname
+        - name: seckey
           valueFrom:
             secretKeyRef:
-              key: STORAGE-ACCOUNT-NAME
+              key: STORAGE-SECRET-KEY
               name: {{ .Values.secretName}}
         - name: KUBERNETES_CLUSTER_DOMAIN
           value: {{ .Values.kubernetesClusterDomain }}

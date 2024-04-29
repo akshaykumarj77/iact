@@ -1,14 +1,14 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: python
+  name: {{ .Values.appName }}
   labels:
-    app: python
+    app: {{ .Values.appName }}
 spec:
   replicas: {{ .Values.python.replicas }}
   selector:
     matchLabels:
-      app: python
+      app: {{ .Values.appName }}
   template:
     metadata:
       annotations:
@@ -31,7 +31,7 @@ spec:
         image: {{ .Values.python.python.image.repository }}:{{ .Values.python.python.image.tag
           | default .Chart.AppVersion }}
         imagePullPolicy: IfNotPresent
-        name: python
+        name: {{ .Values.appName }}
         ports:
         - containerPort: 2022
           name: sshport
@@ -56,7 +56,7 @@ spec:
         - mountPath: /root
           name: root
         - mountPath: /run
-          name: python-sshtest-run
+          name: {{ .Values.appName }}-sshtest-run
         - mountPath: /iact/scripts
           name: iact-scripts
         - mountPath: /home/users/iact/.ssh
@@ -85,4 +85,4 @@ spec:
       - emptyDir: {}
         name: root
       - emptyDir: {}
-        name: python-sshtest-run
+        name: {{ .Values.appName }}-sshtest-run

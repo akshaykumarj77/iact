@@ -14,7 +14,7 @@ data:
        transformer-config:
          customtransform:
            classname: "com.hcl.iAct.Driver"
-           config: "{\"storage_type\": \"adls\",\"db_url\": \"jdbc:postgresql://postgres.datahub-ns.svc.cluster.local:5432/iact\",\"db_minidle\": 1,\"db_maxpoolsize\": 2,\"root_drl_path\":\"iona/iAct/Adapter/decision-service.drl\",\"miniourl\": \"http://minio.minio-ns.svc.cluster.local:9000\",\"root\": \"snowtopic\",\"bootstrapserver\": \"cp-kafka.core-ns.svc.cluster.local:9092\",\"topic\": \"scripttopic\",\"keyserializer\": \"org.apache.kafka.common.serialization.StringSerializer\",\"valueserializer\": \"org.apache.kafka.common.serialization.StringSerializer\",\"alertmanagerurl\":\"http://alertmanager-headless.observe-ns.svc.cluster.local:9093/api/v1/alerts\",\"kafka.ssl.enable\":\"false\", \"retries\":\"0\"}"
+           config: "{\"storage_type\": \"{{ .Values.storage_type }}\",\"keyvault_enabled\": \"{{ .Values.keyvault_enabled }}\",\"db_url\": \"{{ .Values.db_url }}\",\"db_minidle\": 1,\"db_maxpoolsize\": 2,\"root_drl_path\":\"{{ .Values.root_drl_path }}\",\"miniourl\": \"{{ .Values.miniourl }}\",\"root\": \"snowtopic\",\"bootstrapserver\": \"{{ .Values.bootstrapserver }}\",\"topic\": \"scripttopic\",\"keyserializer\": \"{{ .Values.keyserializer }}\",\"valueserializer\": \"{{ .Values.valueserializer }}\",\"alertmanagerurl\":\"{{ .Values.alertmanagerurl }}\",\"kafka.ssl.enable\":\"false\", \"retries\":\"0\"}"
 kind:  ConfigMap
 metadata:
   name: snow-iact-mapper-config

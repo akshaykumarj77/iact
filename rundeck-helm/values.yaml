@@ -3,19 +3,24 @@ secretName: "mysecret01"
 secretProviderClass: "aws-secrets"
 serviceAccountName: "iona-demo-sa"
 storageClassName: ebs-sc
-rundeckurl: "https://iona-preprod.odazprivatecloud.com/rundeck/"
-myRundeck:
-  nginx:
-    image:
-      repository: "ionatestregistry.azurecr.io/nginx"
-      tag: "1.0"
-  replicas: 1
-  rundeck:
-    image:
-      repository: "ionatestregistry.azurecr.io/rundeck"
-      tag: "14.0"
+rundeckurl: "http://k8s-mygroup-8dfb8653fa-1274991415.us-west-2.elb.amazonaws.com/rundeck/"
+nginxImage: "ionatestregistry.azurecr.io/nginx"
+nginxTag: "1.0"
+nginxReplicas: 1
+rundeckImage: "ionatestregistry.azurecr.io/rundeck"
+rundeckTag: "14.0"
+#myRundeck:
+  #nginx:
+    #image:
+      #repository: "ionatestregistry.azurecr.io/nginx"
+      #tag: "1.0"
+  #replicas: 1
+  #rundeck:
+    #image:
+      #repository: "ionatestregistry.azurecr.io/rundeck"
+      #tag: "14.0"
 myRundeckEnvironmentConfigmap:
-  rundeckGrailsUrl: https://iona-preprod.odazprivatecloud.com/rundeck
+  rundeckGrailsUrl: http://k8s-mygroup-8dfb8653fa-1274991415.us-west-2.elb.amazonaws.com/rundeck
   rundeckLoggingStrategy: CONSOLE
   rundeckServerForwarded: "true"
   rundeckcontextpath: "/rundeck/"

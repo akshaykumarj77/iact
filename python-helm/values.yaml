@@ -4,6 +4,7 @@ hl:
     targetPort: 0
   type: ClusterIP
 storageClassName: ebs-sc
+appName: "python"
 kubernetesClusterDomain: cluster.local
 pvc:
   pvcIactScripts:

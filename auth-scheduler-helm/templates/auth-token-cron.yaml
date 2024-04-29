@@ -1,0 +1,64 @@
+apiVersion: batch/v1
+kind: cronJob
+metadata:
+  name: iact-auth-token-cronjob
+spec:
+  schedule: "0 0 * * *"
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          containers:
+          - env:
+            - name: db_user
+              valueFrom:
+               secretKeyRef:
+                 key: POSTGRES-USERNAME
+                 name: {{ .Values.secretName }}
+            - name: db_password
+              valueFrom:
+              secretKeyRef:
+                 key: POSTGRES-PASSWORD
+                 name: {{ .Values.secretName }}
+          - name: iact-auth-token-scheduler
+            image: {{ .Values.imageName }}
+            imagePullPolicy: IfNotPresent
+            securityContext:
+              allowPrivilegeEscalation: false
+              runAsUser: 0
+            volumeMounts:
+            - name: auth-token-config
+              mountPath: /config/authtokenparams.config
+              subPath: authtokenparams.config
+            - mountPath: /mnt/secrets-store
+              name: secrets-store-inline
+              readOnly: true
+            securityContext:
+              readOnlyRootFilesystem: true
+              runAsNonRoot: true
+              runAsUser: 65534
+            resources:
+              limits:
+                cpu: 10m
+                memory: 1Gi
+              requests:
+                cpu: 1m
+                memory: 20mi
+          imagePullSecrets:
+          - name: acrsecret2				
+          volumes:
+          - csi:
+              driver: secrets-store.csi.k8s.io
+              readOnly: true
+              volumeAttributes:
+                secretProviderClass: {{ .Values.secretProviderClass }}
+            name: secrets-store-inline
+          - configMap:
+             defaultMode: 420
+             name: auth-token-config
+            name: auth-token-config
+          dnsConfig:
+           options:
+           - name: ndots
+             value: "1"
+          restartPolicy: OnFailure

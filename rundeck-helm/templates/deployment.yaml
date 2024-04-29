@@ -32,7 +32,7 @@ spec:
       securityContext:
         fsGroup: 10015
       containers:
-      - image: ionatestregistry.azurecr.io/nginx:1.0
+      - image: {{ .Values.nginxImage }}:{{.Values.nginxTag }}
         imagePullPolicy: Always
         livenessProbe:
           exec:
@@ -110,7 +110,7 @@ spec:
         envFrom:
         - configMapRef:
             name: my-rundeck-environment-configmap
-        image: ionatestregistry.azurecr.io/rundeck:14.0
+        image: {{ .Values.rundeckImage }}:{{.Values.rundeckTag }}
           # 6.0
           # 8.0 with port
         imagePullPolicy: Always

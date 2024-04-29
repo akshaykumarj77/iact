@@ -14,3 +14,12 @@ snowIactMapper:
         memory: 100Mi
 secretName: "mysecret01"
 secretProviderClass: "aws-secrets"
+storage_type: "s3"
+keyvault_enabled: "true"
+db_url: "jdbc:postgresql://postgres.datahub-ns.svc.cluster.local:5432/iact"
+root_drl_path: "iactbucket/iona/iAct/Adapter/decision-service.drl"
+miniourl: "http://minio.minio-ns.svc.cluster.local:9000"
+bootstrapserver: "cp-kafka.core-ns.svc.cluster.local:9092"
+keyserializer: "org.apache.kafka.common.serialization.StringSerializer"
+valueserializer: "org.apache.kafka.common.serialization.StringSerializer"
+alertmanagerurl: "http://alertmanager-headless.observe-ns.svc.cluster.local:9093/api/v1/alerts"

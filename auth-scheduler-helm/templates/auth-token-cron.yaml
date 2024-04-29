@@ -1,13 +1,14 @@
 apiVersion: batch/v1
-kind: cronJob
+kind: CronJob
 metadata:
   name: iact-auth-token-cronjob
 spec:
-  schedule: "0 0 * * *"
+  schedule: "*/5 * * * *"
   jobTemplate:
     spec:
       template:
         spec:
+          serviceAccount: iona-demo-sa
           containers:
           - env:
             - name: db_user
@@ -17,10 +18,10 @@ spec:
                  name: {{ .Values.secretName }}
             - name: db_password
               valueFrom:
-              secretKeyRef:
+               secretKeyRef:
                  key: POSTGRES-PASSWORD
                  name: {{ .Values.secretName }}
-          - name: iact-auth-token-scheduler
+            name: iact-auth-token-scheduler
             image: {{ .Values.imageName }}
             imagePullPolicy: IfNotPresent
             securityContext:
@@ -43,7 +44,7 @@ spec:
                 memory: 1Gi
               requests:
                 cpu: 1m
-                memory: 20mi
+                memory: 20Mi
           imagePullSecrets:
           - name: acrsecret2				
           volumes:

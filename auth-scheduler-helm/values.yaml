@@ -1,4 +1,4 @@
-imageName: "ionatestregistry.azurecr.io/iact-auth-token-scheduler:1.0"
+imageName: "ionatestregistry.azurecr.io/iact-auth-token-scheduler-1.0:latest"
 keyvault_enabled: "true"
 db_url: "jdbc:postgresql://postgres.datahub-ns.svc.cluster.local:5432/iact"
 rundeck_url: "https://process-books.dna4.hclets.com"

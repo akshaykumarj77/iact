@@ -1,5 +1,4 @@
 ---
-# Please remove the .lock files from all the charts to avoid issues 
 releases:
 
   - name: postgres
@@ -8,13 +7,23 @@ releases:
     installed: true
     wait: true
     timeout: 120
+    hooks:
+      - events: ["presync"]
+        showlogs: true
+        command: "kubectl"
+        args:
+          - "apply"
+          - "-f"
+          - "./others/*.yaml"
 
   - name: cp-kafka
     namespace: core-ns
     chart: ./kafka-helm/
     installed: true
     wait: true
-    timeout: 120
+    timeout: 300
+    needs: 
+    - datahub-ns/postgres
 
   - name: topic
     namespace: core-ns
@@ -22,6 +31,8 @@ releases:
     installed: true
     wait: true
     timeout: 20
+    needs: 
+    - core-ns/cp-kafka
 
   - name: pgclient
     namespace: datahub-ns
@@ -29,6 +40,8 @@ releases:
     installed: true
     wait: true
     timeout: 20
+    needs:
+    - core-ns/cp-kafka
 
   - name: snowmapper
     namespace: act-ns
@@ -36,6 +49,8 @@ releases:
     installed: true
     wait: true
     timeout: 20
+    needs:
+    - core-ns/cp-kafka
 
   - name: script-finder
     namespace: act-ns
@@ -43,6 +58,8 @@ releases:
     installed: true
     wait: true
     timeout: 20
+    needs:
+    - act-ns/snowmapper
 
   - name: command-executor
     namespace: act-ns
@@ -50,6 +67,8 @@ releases:
     installed: true
     wait: true
     timeout: 20
+    needs:
+    - act-ns/snowmapper
 
   - name: ansible
     namespace: act-ns
@@ -57,6 +76,8 @@ releases:
     installed: true
     wait: true
     timeout: 20
+    needs:
+    - core-ns/cp-kafka
 
   - name: python
     namespace: act-ns
@@ -64,6 +85,8 @@ releases:
     installed: true
     wait: true
     timeout: 20
+    needs:
+    - core-ns/cp-kafka
 
   - name: rundeck
     namespace: act-ns
@@ -71,6 +94,8 @@ releases:
     installed: true
     wait: true
     timeout: 20
+    needs:
+    - act-ns/python
 
   - name: authtoken
     namespace: act-ns
@@ -78,6 +103,8 @@ releases:
     installed: true
     wait: true
     timeout: 20
+    needs:
+    - act-ns/rundeck
 
   - name: alertmanager
     namespace: observe-ns
@@ -85,3 +112,5 @@ releases:
     installed: true
     wait: true
     timeout: 20
+    needs:
+    - act-ns/rundeck

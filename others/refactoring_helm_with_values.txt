@@ -1,0 +1,45 @@
+Refactoring helmfile.yaml with values files templates
+One of expected use-cases of values files templates is to keep helmfile.yaml small and concise.
+
+See the example helmfile.yaml below:
+=================
+---
+releases:
+  - name: postgres
+    namespace: datahub-ns
+    chart: ./postgres-helm/
+    installed: true
+    values:
+    - imageRegistry: "ionatestregistry.azurecr.io/"
+      imageName: "postgres"
+      imageTag: "20.0"
+      replicaCount: 1
+    set:
+      - name: proxy.domain
+        value: {{ requiredEnv "PLATFORM_ID" }}.my-domain.com
+      - name: proxy.scheme
+        value: {{ env "SCHEME" | default "https" }}
+============================================================
+The values and set sections of the config file can be separated out into a template:
+
+helmfile.yaml:
+
+---
+releases:
+  - name: postgres
+    namespace: datahub-ns
+    chart: ./postgres-helm/
+    installed: true
+    values:
+    - values.yaml.gotmpl
+
+==================================
+values.yaml.gotmpl:
+
+imageRegistry: "ionatestregistry.azurecr.io/"
+imageName: "postgres"
+imageTag: "20.0"  
+replicaCount: 1
+proxy:
+  domain: {{ requiredEnv "PLATFORM_ID" }}.my-domain.com
+  scheme: {{ env "SCHEME" | default "https" }}

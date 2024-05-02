@@ -452,10 +452,6 @@ spec:
           #    exec:
           #      command: ["/bin/sh","-c","cp -r /tmp/* /opt/bitnami/kafka/config/"]
           volumeMounts:
-            - name: conf
-              mountPath: /opt/bitnami/kafka/config
-            - name: certs
-              mountPath: /opt/bitnami/kafka/config/certs
             - name: data
               mountPath: {{ .Values.persistence.mountPath }}
             - name: logs
@@ -540,10 +536,6 @@ spec:
         {{- include "common.tplvalues.render" (dict "value" .Values.sidecars "context" $) | nindent 8 }}
         {{- end }}
       volumes:
-        - name: conf
-          emptyDir: {}
-        - name: certs
-          emptyDir: {}
           # persistentVolumeClaim:
           #  claimName: conf-kafka
         {{- if or .Values.config .Values.existingConfigmap }}

@@ -1,14 +1,14 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ include "snowmapper.fullname" . }}-snow-iact-mapper
+  name: {{ include "snowmapper.fullname" . }}-{{ .Values.appName }}
   labels:
   {{- include "snowmapper.labels" . | nindent 4 }}
 spec:
-  replicas: {{ .Values.snowIactMapper.replicas }}
+  replicas: {{ .Values.replicaCount }}
   selector:
     matchLabels:
-      name: snow-iact-mapper
+      name: {{ .Values.appName }}
     {{- include "snowmapper.selectorLabels" . | nindent 6 }}
   template:
     metadata:
@@ -18,12 +18,12 @@ spec:
         sidecar.istio.io/proxyMemory: "128Mi"
         sidecar.istio.io/proxyMemoryLimit: "1Gi" 
       labels:
-        name: snow-iact-mapper
-        app: snow-iact-mapper
+        name: {{ .Values.appName }}
+        app: {{ .Values.appName }}
         version: 1.0.0
       {{- include "snowmapper.selectorLabels" . | nindent 8 }}
     spec:
-      serviceAccountName: iona-demo-sa
+      serviceAccountName: {{ .Values.serviceAccountName }}
       containers:
       - env:
         - name: db_user
@@ -45,8 +45,7 @@ spec:
               name: {{ .Values.secretName}}
         - name: KUBERNETES_CLUSTER_DOMAIN
           value: {{ .Values.kubernetesClusterDomain }}
-        image: {{ .Values.snowIactMapper.snowIactMapper.image.repository }}:{{ .Values.snowIactMapper.snowIactMapper.image.tag
-          | default .Chart.AppVersion }}
+        image: {{ .Values.imageRegistry }}{{ .Values.imageName }}:{{ .Values.imageTag | default .Chart.AppVersion }}
         imagePullPolicy: Always
         name: snow-iact-mapper
         resources: {{- toYaml .Values.snowIactMapper.snowIactMapper.resources | nindent
@@ -60,7 +59,7 @@ spec:
           name: secrets-store-inline
           readOnly: true
         - mountPath: /config/ApplicationCustomProcessor.yaml
-          name: snow-iact-mapper-config
+          name: {{ .Values.appName }}-config
           subPath: ApplicationCustomProcessor.yaml
         - mountPath: /config/Global.yaml
           name: global-config
@@ -89,8 +88,8 @@ spec:
         name: tmp
       - configMap:
           defaultMode: 420
-          name: snow-iact-mapper-config
-        name: snow-iact-mapper-config
+          name: {{ .Values.appName }}-config
+        name: {{ .Values.appName }}-config
       - configMap:
           defaultMode: 420
           name: global-config

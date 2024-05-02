@@ -14,7 +14,7 @@ data:
        transformer-config:
          customtransform:
            classname: "com.hcl.iAct.Driver"
-           config: "{\"storage_type\": \"{{ .Values.storage_type }}\",\"keyvault_enabled\": \"{{ .Values.keyvault_enabled }}\",\"db_url\": \"{{ .Values.db_url }}\",\"db_minidle\": 1,\"db_maxpoolsize\": 2,\"root_drl_path\":\"{{ .Values.root_drl_path }}\",\"miniourl\": \"{{ .Values.miniourl }}\",\"root\": \"snowtopic\",\"bootstrapserver\": \"{{ .Values.bootstrapserver }}\",\"topic\": \"scripttopic\",\"keyserializer\": \"{{ .Values.keyserializer }}\",\"valueserializer\": \"{{ .Values.valueserializer }}\",\"alertmanagerurl\":\"{{ .Values.alertmanagerurl }}\",\"kafka.ssl.enable\":\"false\", \"retries\":\"0\"}"
+           config: "{\"storage_type\": \"{{ .Values.storage_type }}\",\"keyvault_enabled\": \"{{ .Values.keyvault_enabled }}\",\"db_url\": \"{{ .Values.db_url }}\",\"db_minidle\": 1,\"db_maxpoolsize\": 2,\"root_drl_path\":\"{{ .Values.root_drl_path }}\",\"miniourl\": \"{{ .Values.miniourl }}\",\"root\": \"snowtopic\",\"bootstrapserver\": \"{{ .Values.kafkaserver }}\",\"topic\": \"scripttopic\",\"keyserializer\": \"{{ .Values.keyserializer }}\",\"valueserializer\": \"{{ .Values.valueserializer }}\",\"alertmanagerurl\":\"{{ .Values.alertmanagerurl }}\",\"kafka.ssl.enable\":\"false\", \"retries\":\"0\"}"
 kind:  ConfigMap
 metadata:
-  name: snow-iact-mapper-config
+  name: {{ .Values.appName }}-config

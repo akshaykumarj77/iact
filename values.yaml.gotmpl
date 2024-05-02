@@ -1,0 +1,14 @@
+# 'imageRegistry' is the url of registry from which images needs to be pulled e.g. ECR, docker.io, etc
+imageRegistry: "ionatestregistry.azurecr.io/"
+
+# 'replicaCount' is the desired number of replicas for the service being deployed
+replicaCount: 1
+
+# 'serviceAccountName' is the name of service account used to apply secret manager IAM policy
+serviceAccountName: iona-demo-sa
+
+# 'secretName' is the name defined to secrets in secretproviderclass template at spec.secretName
+secretName: "mysecret01"
+
+# 'secretProviderClass' is the name of the secret provider class created in the same namespace
+secretProviderClass: "aws-secrets"

@@ -3,13 +3,22 @@ ansibleHl:
   - port: 2022
     targetPort: 0
   type: ClusterIP
+# 'storageClassName'is the type of the storage class being used in the deployment e.g. ebs, efs or gp2
 storageClassName: ebs-sc
-ansibleProd:
-  ansibleProd:
-    image:
-      repository: "ionatestregistry.azurecr.io/ansible"
-      tag: "6.0"
-  replicas: 1
+# 'imageRegistry' is the url of registry from which images needs to be pulled e.g. ECR, docker.io, etc
+imageRegistry: "ionatestregistry.azurecr.io/"
+# 'imageName' is the name of image to be pulled from 'imageRegistry'
+imageName: "ansible"
+# 'imageTag' that needs to be pulled and deployed in the current deployment e.g. latest
+imageTag: "6.0"
+# 'replicaCount' is the desired number of replicas for the service being deployed
+replicaCount: 1
+#ansibleProd:
+  #ansibleProd:
+    #image:
+      #repository: "ionatestregistry.azurecr.io/ansible"
+      #tag: "6.0"
+  #replicas: 1
 kubernetesClusterDomain: cluster.local
 pvc:
   pvcAnsibleData:

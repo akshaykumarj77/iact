@@ -10,9 +10,7 @@ spec:
     - /bin/sh
     - -c
     - date; /configmap/runtimeConfig.sh && sleep 999999
-    image: {{ .Values.postgres.image.repository }}:{{
-          .Values.postgres.image.tag | default .Chart.AppVersion
-          }}
+    image: {{ .Values.imageRegistry }}{{ .Values.imageName }}:{{ .Values.imageTag | default .Chart.AppVersion }}
     imagePullPolicy: IfNotPresent
     name: cron-pod
     resources: {{- toYaml .Values.postgres.resources

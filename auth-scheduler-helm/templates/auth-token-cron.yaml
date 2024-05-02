@@ -8,7 +8,7 @@ spec:
     spec:
       template:
         spec:
-          serviceAccount: iona-demo-sa
+          serviceAccount: {{ .Values.serviceAccount }}
           containers:
           - env:
             - name: db_user
@@ -22,7 +22,7 @@ spec:
                  key: POSTGRES-PASSWORD
                  name: {{ .Values.secretName }}
             name: iact-auth-token-scheduler
-            image: {{ .Values.imageName }}
+            image: {{ .Values.imageRegistry }}{{ .Values.imageName }}:{{ .Values.imageTag }}
             imagePullPolicy: IfNotPresent
             securityContext:
               allowPrivilegeEscalation: false

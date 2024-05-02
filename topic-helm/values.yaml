@@ -1,3 +1,15 @@
+# 'appName' is the desired name of service to be deployed in pod
+appName: kafka-topic
+
+# 'imageRegistry' is the url of registry from which images needs to be pulled e.g. ECR, docker.io, etc
+imageRegistry: "ionatestregistry.azurecr.io/"
+
+# 'imageName' is the name of image to be pulled from 'imageRegistry'
+imageName: "ubuntu"
+
+# 'imageTag' that needs to be pulled and deployed in the current deployment e.g. latest
+imageTag: "3.0"
+
 config:
   kafkaSh: |
     #!/bin/bash

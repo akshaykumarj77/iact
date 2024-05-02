@@ -6,7 +6,7 @@ metadata:
     app: {{ .Values.appName }}
 spec:
   serviceName: {{ .Values.appName }}
-  replicas: 1
+  replicas: {{ .Values.replicaCount }}
   selector:
     matchLabels:
       app: {{ .Values.appName }}
@@ -18,19 +18,17 @@ spec:
      #   sidecar.istio.io/proxyMemory: "128Mi"
      #   sidecar.istio.io/proxyMemoryLimit: "1Gi" 
       labels:
-        app: postgres
+        app: {{ .Values.appName }}
         version: 1.0.0
     spec:
       securityContext:
         runAsUser: 70
         fsGroup: 70
         runAsNonRoot: true
-      serviceAccountName: iona-demo-sa
+      serviceAccountName: {{ .Values.serviceAccountName }}
       containers:
       - name: {{ .Values.appName }}
-        image: {{ .Values.postgres.postgres.image.repository }}:{{
-          .Values.postgres.postgres.image.tag | default .Chart.AppVersion
-          }}
+        image: {{ .Values.imageRegistry }}{{ .Values.imageName }}:{{ .Values.imageTag | default .Chart.AppVersion }}
         resources: {{- toYaml .Values.postgres.postgres.resources
           | nindent 10 }}
         securityContext:
@@ -81,7 +79,7 @@ spec:
       name: pgdb
     spec:
       accessModes: [ "ReadWriteOnce" ]
-      storageClassName: ebs-sc
+      storageClassName: {{ .Values.storageClassName }}
       resources:
         requests:
           storage: 20Gi

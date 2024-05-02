@@ -3,8 +3,8 @@ kind: Pod
 metadata:
   name: {{ include "topic-helm.fullname" . }}-ubuntu1
   labels:
-     name: kafka-topic
-     app: kafka-topic
+     name: {{ .Values.appName }}
+     app: {{ .Values.appName }}
      version: 1.0.0
   annotations:
      sidecar.istio.io/proxyCPULimit: "1000m"
@@ -17,7 +17,7 @@ spec:
     - /bin/bash
     - -c
     - date; /configmap/kafka.sh
-    image: "ionatestregistry.azurecr.io/ubuntu:3.0"
+    image: {{ .Values.imageRegistry }}{{ .Values.imageName }}:{{ .Values.imageTag }}
     imagePullPolicy: IfNotPresent
     name: ubuntu1
     resources:

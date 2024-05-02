@@ -5,7 +5,7 @@ metadata:
   labels:
     app: ansible
 spec:
-  replicas: {{ .Values.ansibleProd.replicas }}
+  replicas: {{ .Values.replicaCount }}
   selector:
     matchLabels:
       app: ansible
@@ -28,9 +28,16 @@ spec:
         env:
         - name: KUBERNETES_CLUSTER_DOMAIN
           value: {{ .Values.kubernetesClusterDomain }}
-        image: {{ .Values.ansibleProd.ansibleProd.image.repository }}:{{ .Values.ansibleProd.ansibleProd.image.tag
-          | default .Chart.AppVersion }}
+        image: {{ .Values.imageRegistry }}{{ .Values.imageName }}:{{ .Values.imageTag | default .Chart.AppVersion }}
         imagePullPolicy: IfNotPresent
+        lifecycle:
+          postStart:
+            exec:
+              command:
+                - "sh"
+                - "-c"
+                - |
+                  echo "Password123" | sudo -S chown -R iact /home/users/iact/.ssh
         name: ansible-prod
         ports:
         - containerPort: 2022

@@ -1,8 +1,18 @@
 kubernetesClusterDomain: cluster.local
+
+# 'imageRegistry' is the url of registry from which images needs to be pulled e.g. ECR, docker.io, etc
+imageRegistry: "ionatestregistry.azurecr.io/"
+
+# 'imageName' is the name of image to be pulled from 'imageRegistry'
+imageName: "cronjob"
+
+# 'imageTag' that needs to be pulled and deployed in the current deployment e.g. latest
+imageTag: "2.0"
+
 postgres:
-    image:
-      repository: "ionatestregistry.azurecr.io/cronjob"
-      tag: "2.0"
+    #image:
+      #repository: "ionatestregistry.azurecr.io/cronjob"
+      #tag: "2.0"
     resources:
       limits:
         cpu: 2m

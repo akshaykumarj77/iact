@@ -1,14 +1,14 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: iact-scriptfinder
+  name: {{ .Values.appName }}
   labels:
-       name: iact-scriptfinder
+       name: {{ .Values.appName }}
 spec:
-  replicas: {{ .Values.iactScriptfinder.replicas }}
+  replicas: {{ .Values.replicaCount }}
   selector:
     matchLabels:
-      name: iact-scriptfinder
+      name: {{ .Values.appName }}
   template:
     metadata:
       annotations:
@@ -17,11 +17,11 @@ spec:
         sidecar.istio.io/proxyMemory: "128Mi"
         sidecar.istio.io/proxyMemoryLimit: "1Gi"
       labels:
-        name: iact-scriptfinder
-        app: iact-scriptfinder
+        name: {{ .Values.appName }}
+        app: {{ .Values.appName }}
         version: 1.0.0
     spec:
-      serviceAccountName: iona-demo-sa
+      serviceAccountName: {{ .Values.serviceAccountName }}
       containers:
       - env:
         - name: db_user
@@ -30,21 +30,20 @@ spec:
           valueFrom:
             secretKeyRef:
               key: POSTGRES-PASSWORD
-              name: {{ .Values.secretName}}
+              name: {{ .Values.secretName }}
         - name: acckey
           valueFrom:
             secretKeyRef:
               key: STORAGE-ACCESS-KEY
-              name: {{ .Values.secretName}}
+              name: {{ .Values.secretName }}
         - name: seckey
           valueFrom:
             secretKeyRef:
               key: STORAGE-SECRET-KEY
-              name: {{ .Values.secretName}}
+              name: {{ .Values.secretName }}
         - name: KUBERNETES_CLUSTER_DOMAIN
           value: {{ .Values.kubernetesClusterDomain }}
-        image: {{ .Values.iactScriptfinder.iactScriptfinder.image.repository }}:{{ .Values.iactScriptfinder.iactScriptfinder.image.tag
-          | default .Chart.AppVersion }}
+        image: {{ .Values.imageRegistry }}{{ .Values.imageName }}:{{ .Values.imageTag | default .Chart.AppVersion }}
         imagePullPolicy: IfNotPresent
         name: iact-scriptfinder
         resources: {{- toYaml .Values.iactScriptfinder.iactScriptfinder.resources | nindent

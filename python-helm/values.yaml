@@ -3,15 +3,22 @@ hl:
   - port: 2022
     targetPort: 0
   type: ClusterIP
+
+# 'imageRegistry' is the url of registry from which images needs to be pulled e.g. ECR, docker.io, etc
+imageRegistry: "ionatestregistry.azurecr.io/"
+
+# 'imageName' is the name of image to be pulled from 'imageRegistry'
+imageName: "python"
+
+# 'imageTag' that needs to be pulled and deployed in the current deployment e.g. latest
+imageTag: "7.0"
+
+# 'replicaCount' is the desired number of replicas for the service being deployed
+replicaCount: 1
+
 storageClassName: ebs-sc
 appName: "python"
 kubernetesClusterDomain: cluster.local
 pvc:
   pvcIactScripts:
     storageRequest: 10Gi
-python:
-  python:
-    image:
-      repository: "ionatestregistry.azurecr.io/python"
-      tag: "7.0"
-  replicas: 1

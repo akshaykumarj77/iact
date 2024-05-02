@@ -2,15 +2,25 @@
 # This is a YAML-formatted file.
 # Declare variables to be passed into your templates.
 
+# 'imageRegistry' is the url of registry from which images needs to be pulled e.g. ECR, docker.io, etc
+imageRegistry: "docker.io/bitnami/"
+
+# 'imageName' is the name of image to be pulled from 'imageRegistry'
+imageName: "alertmanager"
+
+# 'imageTag' that needs to be pulled and deployed in the current deployment e.g. latest
+imageTag: "latest"
+
+# 'replicaCount' is the desired number of replicas for the service being deployed
 replicaCount: 1
 
 image:
-  repository: "docker.io/bitnami/alertmanager"
+  #repository: "docker.io/bitnami/alertmanager"
   #bitnami/alertmanager
   #quay.io/prometheus/alertmanager
   pullPolicy: IfNotPresent
   # Overrides the image tag whose default is the chart appVersion.
-  tag: "latest"
+  #tag: "latest"
 
 extraArgs: {}
 

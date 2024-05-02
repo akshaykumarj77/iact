@@ -5,7 +5,7 @@ metadata:
   labels:
     app: {{ .Values.appName }}
 spec:
-  replicas: {{ .Values.python.replicas }}
+  replicas: {{ .Values.replicaCount }}
   selector:
     matchLabels:
       app: {{ .Values.appName }}
@@ -28,9 +28,16 @@ spec:
         env:
         - name: KUBERNETES_CLUSTER_DOMAIN
           value: {{ .Values.kubernetesClusterDomain }}
-        image: {{ .Values.python.python.image.repository }}:{{ .Values.python.python.image.tag
-          | default .Chart.AppVersion }}
+        image: {{ .Values.imageRegistry }}{{ .Values.imageName }}:{{ .Values.imageTag | default .Chart.AppVersion }}
         imagePullPolicy: IfNotPresent
+        lifecycle:
+           postStart:
+            exec:
+              command:
+                - "sh"
+                - "-c"
+                - |
+                  echo "Password123" | sudo -S chown -R iact /home/users/iact/.ssh
         name: {{ .Values.appName }}
         ports:
         - containerPort: 2022

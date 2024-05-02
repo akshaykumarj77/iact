@@ -1,7 +1,32 @@
-imageName: "ionatestregistry.azurecr.io/iact-auth-token-scheduler-1.0:latest"
-keyvault_enabled: "true"
-db_url: "jdbc:postgresql://postgres.datahub-ns.svc.cluster.local:5432/iact"
-rundeck_url: "https://process-books.dna4.hclets.com"
-alertmanagerurl: "http://alertmanager-hl.observe-ns.svc.cluster.local:9093/api/v1/alerts"
+# 'imageRegistry' is the url of registry from which images needs to be pulled e.g. ECR, docker.io, etc
+imageRegistry: "ionatestregistry.azurecr.io/"
+
+# 'imageName' is the name of image to be pulled from 'imageRegistry'
+imageName: "iact-auth-token-scheduler-1.0"
+
+# 'imageTag' that needs to be pulled and deployed in the current deployment e.g. latest
+imageTag: "latest"
+
+# 'replicaCount' is the desired number of replicas for the service being deployed
+# replicaCount: 1
+
+# 'serviceAccount' is the name of service account used to apply secret manager IAM policy
+serviceAccount: iona-demo-sa
+
+# 'secretName' is the name defined to secrets in secretproviderclass template at spec.secretName
 secretName: "mysecret01"
+
+# 'secretProviderClass' is the name of the secret provider class created in the same namespace
 secretProviderClass: "aws-secrets"
+
+# 'keyvault_enabled' value can be true or false depending upon the requirements
+keyvault_enabled: "true"
+
+# 'db_url' is the URL of the postgres database followed by port number and username
+db_url: "jdbc:postgresql://postgres.datahub-ns.svc.cluster.local:5432/iact"
+
+# 'rundeck_url' is the endpoint URL of the rundeck service
+rundeck_url: "https://process-books.dna4.hclets.com"
+
+# 'alertmanagerurl' is the endpoint URL of alert manager service
+alertmanagerurl: "http://alertmanager-hl.observe-ns.svc.cluster.local:9093/api/v1/alerts"

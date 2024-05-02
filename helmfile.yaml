@@ -1,0 +1,87 @@
+---
+# Please remove the .lock files from all the charts to avoid issues 
+releases:
+
+  - name: postgres
+    namespace: datahub-ns
+    chart: ./postgres-helm/
+    installed: true
+    wait: true
+    timeout: 120
+
+  - name: cp-kafka
+    namespace: core-ns
+    chart: ./kafka-helm/
+    installed: true
+    wait: true
+    timeout: 120
+
+  - name: topic
+    namespace: core-ns
+    chart: ./topic-helm/
+    installed: true
+    wait: true
+    timeout: 20
+
+  - name: pgclient
+    namespace: datahub-ns
+    chart: ./database-helm/
+    installed: true
+    wait: true
+    timeout: 20
+
+  - name: snowmapper
+    namespace: act-ns
+    chart: ./snowmapper-helm/
+    installed: true
+    wait: true
+    timeout: 20
+
+  - name: script-finder
+    namespace: act-ns
+    chart: ./script-finder-helm/
+    installed: true
+    wait: true
+    timeout: 20
+
+  - name: command-executor
+    namespace: act-ns
+    chart: ./command-executor-helm/
+    installed: true
+    wait: true
+    timeout: 20
+
+  - name: ansible
+    namespace: act-ns
+    chart: ./ansible-helm/
+    installed: true
+    wait: true
+    timeout: 20
+
+  - name: python
+    namespace: act-ns
+    chart: ./python-helm/
+    installed: true
+    wait: true
+    timeout: 20
+
+  - name: rundeck
+    namespace: act-ns
+    chart: ./rundeck-helm/
+    installed: true
+    wait: true
+    timeout: 20
+
+  - name: authtoken
+    namespace: act-ns
+    chart: ./auth-scheduler-helm/
+    installed: true
+    wait: true
+    timeout: 20
+
+  - name: alertmanager
+    namespace: observe-ns
+    chart: ./alertmanager-helm/
+    installed: true
+    wait: true
+    timeout: 20

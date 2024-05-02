@@ -6,9 +6,9 @@ postgres:
     targetPort: 0
   type: ClusterIP
   postgres:
-    image:
-      repository: "ionatestregistry.azurecr.io/postgres"
-      tag: "20.0"
+    #image:
+      #repository: "ionatestregistry.azurecr.io/postgres"
+      #tag: "20.0"
     resources:
       limits:
         cpu: "1"
@@ -16,7 +16,31 @@ postgres:
       requests:
         cpu: "9m"
         memory: "150Mi"
-secretName: "mysecret01"
 keyVaultName: ""
-secretProviderClass: "aws-secrets"
+
+# 'appName' is the desired name of the service in the container
 appName: "postgres"
+
+# 'imageRegistry' is the url of registry from which images needs to be pulled e.g. ECR, docker.io, etc
+imageRegistry: "ionatestregistry.azurecr.io/"
+
+# 'imageName' is the name of image to be pulled from 'imageRegistry'
+imageName: "postgres"
+
+# 'imageTag' that needs to be pulled and deployed in the current deployment e.g. latest
+imageTag: "20.0"
+
+# 'replicaCount' is the desired number of replicas for the service being deployed
+replicaCount: 1
+
+# 'serviceAccountName' is the name of service account used to apply secret manager IAM policy
+serviceAccountName: iona-demo-sa
+
+# 'secretName' is the name defined to secrets in secretproviderclass template at spec.secretName
+secretName: "mysecret01"
+
+# 'secretProviderClass' is the name of the secret provider class created in the same namespace
+secretProviderClass: "aws-secrets"
+
+# 'storageClassName' is the type of the storage class being used in the deployment e.g. ebs, efs or gp2
+storageClassName: ebs-sc

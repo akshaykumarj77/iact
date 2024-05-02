@@ -5,7 +5,7 @@ metadata:
   labels:
     name: iact-command-executors
 spec:
-  replicas: {{ .Values.iactCommandExecutors.replicas }}
+  replicas: {{ .Values.replicaCount }}
   selector:
     matchLabels:
       name: iact-command-executors
@@ -21,7 +21,7 @@ spec:
         app: iact-command-executors
         version: 1.0.0
     spec:
-      serviceAccountName: iona-demo-sa
+      serviceAccountName: {{ .Values.serviceAccountName }}
       containers:
       - env:
         - name: db_user
@@ -34,9 +34,7 @@ spec:
               name: {{ .Values.secretName}}
         - name: KUBERNETES_CLUSTER_DOMAIN
           value: {{ .Values.kubernetesClusterDomain }}
-        image: {{ .Values.iactCommandExecutors.iactCommandExecutors.image.repository }}:{{
-          .Values.iactCommandExecutors.iactCommandExecutors.image.tag | default .Chart.AppVersion
-          }}
+        image: {{ .Values.imageRegistry }}{{ .Values.imageName }}:{{ .Values.imageTag | default .Chart.AppVersion }}
         imagePullPolicy: IfNotPresent
         name: iact-command-executors
         resources: {{- toYaml .Values.iactCommandExecutors.iactCommandExecutors.resources

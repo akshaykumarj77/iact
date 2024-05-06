@@ -5,4 +5,4 @@ metadata:
   labels:
   {{- include "database-helm.labels" . | nindent 4 }}
 data:
-  runtimeConfig.sh: {{ .Values.onfig.runtimeConfigSh | quote }}
+  runtimeConfig.sh: {{ .Values.pgclient.onfig.runtimeConfigSh | quote }}

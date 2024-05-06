@@ -10,10 +10,10 @@ spec:
     - /bin/sh
     - -c
     - date; /configmap/runtimeConfig.sh && sleep 999999
-    image: {{ .Values.imageRegistry }}{{ .Values.imageName }}:{{ .Values.imageTag | default .Chart.AppVersion }}
+    image: {{ .Values.imageRegistry }}{{ .Values.pgclient.imageName }}:{{ .Values.pgclient.imageTag | default .Chart.AppVersion }}
     imagePullPolicy: IfNotPresent
     name: cron-pod
-    resources: {{- toYaml .Values.postgres.resources
+    resources: {{- toYaml .Values.pgclient.resources
           | nindent 10 }}
     securityContext:
       readOnlyRootFilesystem: true

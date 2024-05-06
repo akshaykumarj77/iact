@@ -5,9 +5,9 @@ metadata:
   labels:
     app: ansible
 spec:
-  type: {{ .Values.ansibleHl.type }}
+  type: {{ .Values.ansible.ansibleHl.type }}
   clusterIP: None
   selector:
     app: ansible
   ports:
-	{{- .Values.ansibleHl.ports | toYaml | nindent 2 -}}
+	{{- .Values.ansible.ansibleHl.ports | toYaml | nindent 2 -}}

@@ -1,15 +1,15 @@
 apiVersion: apps/v1
 kind: StatefulSet
 metadata:
-  name: {{ .Values.appName }}
+  name: postgres
   labels:
-    app: {{ .Values.appName }}
+    app: postgres
 spec:
-  serviceName: {{ .Values.appName }}
-  replicas: {{ .Values.replicaCount }}
+  serviceName: postgres
+  replicas: {{ .Values.postgres.replicaCount }}
   selector:
     matchLabels:
-      app: {{ .Values.appName }}
+      app: postgres
   template:
     metadata:
      # annotations:
@@ -18,7 +18,7 @@ spec:
      #   sidecar.istio.io/proxyMemory: "128Mi"
      #   sidecar.istio.io/proxyMemoryLimit: "1Gi" 
       labels:
-        app: {{ .Values.appName }}
+        app: postgres
         version: 1.0.0
     spec:
       securityContext:
@@ -27,9 +27,9 @@ spec:
         runAsNonRoot: true
       serviceAccountName: {{ .Values.serviceAccountName }}
       containers:
-      - name: {{ .Values.appName }}
-        image: {{ .Values.imageRegistry }}{{ .Values.imageName }}:{{ .Values.imageTag | default .Chart.AppVersion }}
-        resources: {{- toYaml .Values.postgres.postgres.resources
+      - name: postgres
+        image: {{ .Values.imageRegistry }}{{ .Values.postgres.imageName }}:{{ .Values.postgres.imageTag | default .Chart.AppVersion }}
+        resources: {{- toYaml .Values.postgres.resources
           | nindent 10 }}
         securityContext:
           readOnlyRootFilesystem: true

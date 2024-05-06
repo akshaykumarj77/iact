@@ -5,9 +5,9 @@ metadata:
   labels:
   {{- include "rundeck-helm.labels" . | nindent 4 }}
 spec:
-  type: {{ .Values.rundeckHl.type }}
+  type: {{ .Values.rundeck.rundeckHl.type }}
   selector:
     app.kubernetes.io/instance: my-rundeck
     app.kubernetes.io/name: rundeck
   ports:
-	{{- .Values.rundeckHl.ports | toYaml | nindent 2 -}}
+	{{- .Values.rundeck.rundeckHl.ports | toYaml | nindent 2 -}}

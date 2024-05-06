@@ -5,7 +5,7 @@ metadata:
   labels:
     app: ansible
 spec:
-  replicas: {{ .Values.replicaCount }}
+  replicas: {{ .Values.ansible.replicaCount }}
   selector:
     matchLabels:
       app: ansible
@@ -28,7 +28,7 @@ spec:
         env:
         - name: KUBERNETES_CLUSTER_DOMAIN
           value: {{ .Values.kubernetesClusterDomain }}
-        image: {{ .Values.imageRegistry }}{{ .Values.imageName }}:{{ .Values.imageTag | default .Chart.AppVersion }}
+        image: {{ .Values.imageRegistry }}{{ .Values.ansible.imageName }}:{{ .Values.ansible.imageTag | default .Chart.AppVersion }}
         imagePullPolicy: IfNotPresent
         lifecycle:
           postStart:

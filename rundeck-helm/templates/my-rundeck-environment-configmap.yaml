@@ -8,12 +8,12 @@ metadata:
     meta.helm.sh/release-name: my-rundeck
     meta.helm.sh/release-namespace: act-ns
 data:
-  RUNDECK_GRAILS_URL: {{ .Values.myRundeckEnvironmentConfigmap.rundeckGrailsUrl |
+  RUNDECK_GRAILS_URL: {{ .Values.rundeck.myRundeckEnvironmentConfigmap.rundeckGrailsUrl |
     quote }}
-  RUNDECK_LOGGING_STRATEGY: {{ .Values.myRundeckEnvironmentConfigmap.rundeckLoggingStrategy
+  RUNDECK_LOGGING_STRATEGY: {{ .Values.rundeck.myRundeckEnvironmentConfigmap.rundeckLoggingStrategy
     | quote }}
-  RUNDECK_SERVER_FORWARDED: {{ .Values.myRundeckEnvironmentConfigmap.rundeckServerForwarded
+  RUNDECK_SERVER_FORWARDED: {{ .Values.rundeck.myRundeckEnvironmentConfigmap.rundeckServerForwarded
     | quote }}
-  RUNDECK_SERVER_CONTEXTPATH: {{ .Values.myRundeckEnvironmentConfigmap.rundeckcontextpath
+  RUNDECK_SERVER_CONTEXTPATH: {{ .Values.rundeck.myRundeckEnvironmentConfigmap.rundeckcontextpath
     | quote }}
 

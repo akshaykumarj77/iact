@@ -1,14 +1,14 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ .Values.appName }}
+  name: python
   labels:
-    app: {{ .Values.appName }}
+    app: python
 spec:
-  replicas: {{ .Values.replicaCount }}
+  replicas: {{ .Values.python.replicaCount }}
   selector:
     matchLabels:
-      app: {{ .Values.appName }}
+      app: python
   template:
     metadata:
       annotations:
@@ -28,7 +28,7 @@ spec:
         env:
         - name: KUBERNETES_CLUSTER_DOMAIN
           value: {{ .Values.kubernetesClusterDomain }}
-        image: {{ .Values.imageRegistry }}{{ .Values.imageName }}:{{ .Values.imageTag | default .Chart.AppVersion }}
+        image: {{ .Values.imageRegistry }}{{ .Values.python.imageName }}:{{ .Values.python.imageTag | default .Chart.AppVersion }}
         imagePullPolicy: IfNotPresent
         lifecycle:
            postStart:
@@ -38,7 +38,7 @@ spec:
                 - "-c"
                 - |
                   echo "Password123" | sudo -S chown -R iact /home/users/iact/.ssh
-        name: {{ .Values.appName }}
+        name: python
         ports:
         - containerPort: 2022
           name: sshport
@@ -63,7 +63,7 @@ spec:
         - mountPath: /root
           name: root
         - mountPath: /run
-          name: {{ .Values.appName }}-sshtest-run
+          name: python-sshtest-run
         - mountPath: /iact/scripts
           name: iact-scripts
         - mountPath: /home/users/iact/.ssh
@@ -92,4 +92,4 @@ spec:
       - emptyDir: {}
         name: root
       - emptyDir: {}
-        name: {{ .Values.appName }}-sshtest-run
+        name: python-sshtest-run

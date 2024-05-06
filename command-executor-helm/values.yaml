@@ -1,47 +1,47 @@
-# 'imageRegistry' is the url of registry from which images needs to be pulled e.g. ECR, docker.io, etc
-imageRegistry: "ionatestregistry.azurecr.io/"
-
-# 'imageName' is the name of image to be pulled from 'imageRegistry'
-imageName: "iact-command-executors"
-
-# 'imageTag' that needs to be pulled and deployed in the current deployment e.g. latest
-imageTag: "6.0"
-
-# 'replicaCount' is the desired number of replicas for the service being deployed
-replicaCount: 1
-
-# 'serviceAccountName' is the name of service account used to apply IAM policy for AWS secret manager
-serviceAccountName: iona-demo-sa
-
-# 'secretName' is the name defined to secrets in secretproviderclass template at spec.secretName
-secretName: "mysecret01"
-
-# 'secretProviderClass' is the name of the secret provider class created in the same namespace
-secretProviderClass: "aws-secrets"
-
-# 'db_url' is the URL of the postgres database followed by port number and username
-db_url: "jdbc:postgresql://postgres.datahub-ns.svc.cluster.local:5432/iact"
-
-# 'rundeck_user' is the user having access to rundeck endpoint URL
-rundeck_user: "admin"
-
-# 'rundeck_url' is the endpoint URL of the rundeck service
-rundeck_url: "https://process-books.dna4.hclets.com"
-
-# 'alertmanagerurl' is the endpoint URL of alert manager service
-alertmanagerurl: "http://alertmanager-hl.observe-ns.svc.cluster.local:9093/api/v1/alerts"
-
-iactCommandExecutors:
-  iactCommandExecutors:
-    #image:
-      #repository: "ionatestregistry.azurecr.io/iact-command-executors"
-      #tag: "6.0"
-    resources:
-      limits:
-        cpu: "1"
-        memory: 900Mi
-      requests:
-        cpu: 10m
-        memory: 50Mi
-  #replicas: 1
-kubernetesClusterDomain: cluster.local
+## 'imageRegistry' is the url of registry from which images needs to be pulled e.g. ECR, docker.io, etc
+#imageRegistry: "ionatestregistry.azurecr.io/"
+#
+## 'imageName' is the name of image to be pulled from 'imageRegistry'
+#imageName: "iact-command-executors"
+#
+## 'imageTag' that needs to be pulled and deployed in the current deployment e.g. latest
+#imageTag: "6.0"
+#
+## 'replicaCount' is the desired number of replicas for the service being deployed
+#replicaCount: 1
+#
+## 'serviceAccountName' is the name of service account used to apply IAM policy for AWS secret manager
+#serviceAccountName: iona-demo-sa
+#
+## 'secretName' is the name defined to secrets in secretproviderclass template at spec.secretName
+#secretName: "mysecret01"
+#
+## 'secretProviderClass' is the name of the secret provider class created in the same namespace
+#secretProviderClass: "aws-secrets"
+#
+## 'db_url' is the URL of the postgres database followed by port number and username
+#db_url: "jdbc:postgresql://postgres.datahub-ns.svc.cluster.local:5432/iact"
+#
+## 'rundeck_user' is the user having access to rundeck endpoint URL
+#rundeck_user: "admin"
+#
+## 'rundeck_url' is the endpoint URL of the rundeck service
+#rundeck_url: "https://process-books.dna4.hclets.com"
+#
+## 'alertmanagerurl' is the endpoint URL of alert manager service
+#alertmanagerurl: "http://alertmanager-hl.observe-ns.svc.cluster.local:9093/api/v1/alerts"
+#
+#iactCommandExecutors:
+#  iactCommandExecutors:
+#    #image:
+#      #repository: "ionatestregistry.azurecr.io/iact-command-executors"
+#      #tag: "6.0"
+#    resources:
+#      limits:
+#        cpu: "1"
+#        memory: 900Mi
+#      requests:
+#        cpu: 10m
+#        memory: 50Mi
+#  #replicas: 1
+#kubernetesClusterDomain: cluster.local

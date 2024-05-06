@@ -11,7 +11,7 @@ metadata:
   name: my-rundeck
   namespace: act-ns
 spec:
-  replicas: 1
+  replicas: {{ .Values.rundeck.replicaCount }}
   selector:
     matchLabels:
       app.kubernetes.io/instance: my-rundeck
@@ -32,7 +32,7 @@ spec:
       securityContext:
         fsGroup: 10015
       containers:
-      - image: {{ .Values.nginxImage }}:{{.Values.nginxTag }}
+      - image: {{ .Values.imageRegistry }}{{ .Values.rundeck.nginxImage }}:{{.Values.rundeck.nginxTag }}
         imagePullPolicy: Always
         livenessProbe:
           exec:
@@ -87,7 +87,7 @@ spec:
           && /home/rundeck/docker-lib/entry.sh
         env:
         - name: RUNDECK_GRAILS_URL
-          value: {{ .Values.rundeckurl }}
+          value: {{ .Values.rundeck.rundeckurl }}
         - name: RUNDECK_SERVER_FORWARDED
           value: "true"
         - name: RUNDECK_LOGGING_STRATEGY
@@ -110,7 +110,7 @@ spec:
         envFrom:
         - configMapRef:
             name: my-rundeck-environment-configmap
-        image: {{ .Values.rundeckImage }}:{{.Values.rundeckTag }}
+        image: {{ .Values.imageRegistry }}{{ .Values.rundeck.rundeckImage }}:{{.Values.rundeck.rundeckTag }}
           # 6.0
           # 8.0 with port
         imagePullPolicy: Always

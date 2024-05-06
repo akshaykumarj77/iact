@@ -1,0 +1,277 @@
+# provide the key:value for each values
+# release name of services needs to be provided
+# 'imageName' is the name of image to be pulled from 'imageRegistry'
+# 'imageTag' that needs to be pulled and deployed in the current deployment e.g. latest
+# 'replicaCount' is the desired number of replicas for the service being deployed
+# 'serviceAccountName' is the name of service account used to apply secret manager IAM policy
+
+
+# 'imageRegistry' is the url of registry from which images needs to be pulled e.g. ECR, docker.io, etc
+imageRegistry: "ionatestregistry.azurecr.io/"
+
+kubernetesClusterDomain: cluster.local
+
+# 'secretName' is the name defined to secrets in secretproviderclass template at spec.secretName
+secretName: "mysecret01"
+
+# 'secretProviderClass' is the name of the secret provider class created in the same namespace
+secretProviderClass: "aws-secrets"
+
+# 'storageClassName' is the type of the storage class being used in the deployment e.g. ebs, efs or gp2
+storageClassName: ebs-sc
+
+# 'serviceAccountName' is the name of service account used to apply secret manager IAM policy
+serviceAccountName: iona-demo-sa
+
+# 'db_url' is the URL of the postgres database followed by port number and username
+db_url: "jdbc:postgresql://postgres.datahub-ns.svc.cluster.local:5432/iact"
+
+
+# This section represents values for 'postgres' service
+postgres
+  imageName: "postgres"
+  imageTag: "20.0"
+  replicaCount: 1
+  ports:
+  - name: pgservice
+    port: 5432
+    targetPort: 0 
+  type: ClusterIP
+  resources:
+    limits:
+      cpu: "1"
+      memory: "2Gi"
+    requests:
+      cpu: "9m"
+      memory: "150Mi"
+  keyVaultName: ""
+
+
+# This section represents values for 'cp-kafka' service
+cp-kafka
+  image:
+    registry: docker.io
+    repository: bitnami/kafka
+    tag: 3.4.0-debian-11-r15
+	digest: ""
+	pullPolicy: Always
+	pullSecrets:
+      - acrsecret2
+    debug: false
+  replicaCount: 1
+  zookeeper:
+    replicaCount: 1
+
+
+# This section represents values for 'topic'
+topic
+  appName: kafka-topic
+  imageName: "ubuntu"
+  imageTag: "3.0"
+  config:
+  kafkaSh: |
+    #!/bin/bash
+    # kafka_2.13-3.4.0
+    # export KAFKA_OPTS="-Djava.security.auth.login.config=/tmp/kafka_jass.conf"
+    #/tmp/kafka_2.13-3.4.0/bin/kafka-topics.sh --create --bootstrap-server=cp-kafka.core-ns.svc.cluster.local:9092 --topic alerttopic --partitions 3 --replication-factor 1
+    #/tmp/kafka_2.13-3.4.0/bin/kafka-topics.sh --create --bootstrap-server=cp-kafka.core-ns.svc.cluster.local:9092 --topic alertprocessedtopic  --partitions 3 --replication-factor 1
+    #/tmp/kafka_2.13-3.4.0/bin/kafka-topics.sh --create --bootstrap-server=cp-kafka.core-ns.svc.cluster.local:9092 --topic glpitopic  --partitions 3 --replication-factor 1
+    #/tmp/kafka_2.13-3.4.0/bin/kafka-topics.sh --create --bootstrap-server=cp-kafka.core-ns.svc.cluster.local:9092 --topic resetalerttopic  --partitions 3 --replication-factor 1
+    #/tmp/kafka_2.13-3.4.0/bin/kafka-topics.sh --create --bootstrap-server=cp-kafka.core-ns.svc.cluster.local:9092 --topic resetalerttopicop  --partitions 3 --replication-factor 1
+    /tmp/kafka_2.13-3.4.0/bin/kafka-topics.sh --create --bootstrap-server=cp-kafka.core-ns.svc.cluster.local:9092 --topic rundecktopic  --partitions 3 --replication-factor 1
+    /tmp/kafka_2.13-3.4.0/bin/kafka-topics.sh --create --bootstrap-server=cp-kafka.core-ns.svc.cluster.local:9092 --topic rundecktopicop  --partitions 3 --replication-factor 1
+    /tmp/kafka_2.13-3.4.0/bin/kafka-topics.sh --create --bootstrap-server=cp-kafka.core-ns.svc.cluster.local:9092 --topic scripttopic  --partitions 3 --replication-factor 1
+    /tmp/kafka_2.13-3.4.0/bin/kafka-topics.sh --create --bootstrap-server=cp-kafka.core-ns.svc.cluster.local:9092 --topic snowtopic  --partitions 3 --replication-factor 1
+
+
+# This section represents values for 'pgclient' service
+pgclient
+  imageName: "cronjob"
+  imageTag: "2.0"
+  resources:
+    limits:
+      cpu: 2m
+      memory: 70Mi
+    requests:
+      cpu: 1m
+      memory: 50Mi
+  onfig:
+  runtimeConfigSh: |
+    #!/bin/ash
+    export PGPASSWORD='Abcd1234'
+    database="admindb"
+
+    echo "Connecting to pgsql admindb database using adminuser"
+    psql -h postgres.datahub-ns.svc.cluster.local -p 5432 -U adminuser -d admindb -c "CREATE ROLE iona_svc LOGIN PASSWORD 'Abcd1234';"
+    #psql -h postgres.datahub-ns.svc.cluster.local -p 5432 -U adminuser -d admindb -c "CREATE DATABASE grafanadb WITH OWNER = iona_svc;"
+    psql -h postgres.datahub-ns.svc.cluster.local -p 5432 -U adminuser -d admindb -c "CREATE DATABASE iact WITH OWNER = iona_svc;"
+    #psql -h postgres.datahub-ns.svc.cluster.local -p 5432 -U adminuser -d admindb -c "CREATE DATABASE kyle WITH OWNER = iona_svc;"
+    psql -h postgres.datahub-ns.svc.cluster.local -p 5432 -U adminuser -d admindb -c "CREATE DATABASE rundeck WITH OWNER = iona_svc;"
+    psql -h postgres.datahub-ns.svc.cluster.local -p 5432 -U iona_svc -d iact -f /database/iact.sql
+
+
+# This section represents values for 'snowmapper' service
+snowmapper
+  imageName: "snow-iact-mapper"
+  imageTag: "33.0"
+  replicaCount: 1
+  storage_type: "s3"
+  root_drl_path: "iactbucket/iona/iAct/Adapter/decision-service.drl"
+  keyvault_enabled: "true"
+  miniourl: "http://minio.minio-ns.svc.cluster.local:9000"
+  kafkaserver: "cp-kafka.core-ns.svc.cluster.local:9092"
+  keyserializer: "org.apache.kafka.common.serialization.StringSerializer"
+  valueserializer: "org.apache.kafka.common.serialization.StringSerializer"
+  alertmanagerurl: "http://alertmanager-hl.observe-ns.svc.cluster.local:9093/api/v1/alerts"
+  snowIactMapper:
+    snowIactMapper:
+      resources:
+        limits:
+          cpu: "1"
+          memory: 1Gi
+        requests:
+          cpu: 500m
+          memory: 100Mi
+
+
+# This section represents values for 'script-finder' service
+script-finder
+  imageName: "iact-scriptfinder"
+  imageTag: "8.0"
+  replicaCount: 1
+  storage_type: "s3"
+  keyvault_enabled: "true"
+  miniourl: "http://minio.minio-ns.svc.cluster.local:9000"
+  kafkaserver: "cp-kafka.core-ns.svc.cluster.local:9092"
+  keyserializer: "org.apache.kafka.common.serialization.StringSerializer"
+  valueserializer: "org.apache.kafka.common.serialization.StringSerializer"
+  alertmanagerurl: "http://alertmanager-hl.observe-ns.svc.cluster.local:9093/api/v1/alerts"
+  iactScriptfinder:
+    iactScriptfinder:
+      resources:
+        limits:
+          cpu: "1"
+          memory: 900Mi
+        requests:
+          cpu: 500m
+          memory: 100Mi
+
+
+# This section represents values for 'command-executor' service
+command-executor
+  imageName: "iact-command-executors"
+  imageTag: "6.0"
+  replicaCount: 1
+  rundeck_user: "admin"
+  rundeck_url: "https://process-books.dna4.hclets.com"
+  alertmanagerurl: "http://alertmanager-hl.observe-ns.svc.cluster.local:9093/api/v1/alerts"
+  iactCommandExecutors:
+    iactCommandExecutors:
+      resources:
+        limits:
+          cpu: "1"
+          memory: 900Mi
+        requests:
+          cpu: 10m
+          memory: 50Mi
+
+
+# This section represents values for 'ansible' service
+ansible
+  imageName: "ansible"
+  imageTag: "6.0"
+  replicaCount: 1
+  pvc:
+    pvcAnsibleData:
+      storageRequest: 5Gi
+    pvcAnsibleSsh:
+      storageRequest: 1Gi
+  ansibleHl:
+    ports:
+    - port: 2022
+      targetPort: 0
+    type: ClusterIP
+
+
+# This section represents values for 'python' service
+python
+  imageName: "python"
+  imageTag: "7.0"
+  replicaCount: 1
+  pvc:
+    pvcIactScripts:
+      storageRequest: 10Gi
+  hl:
+    ports:
+    - port: 2022
+      targetPort: 0
+    type: ClusterIP
+
+
+# This section represents values for 'rundeck' service
+rundeck
+  nginxImage: "nginx"
+  nginxTag: "1.0"
+  nginxReplicas: 1
+  rundeckImage: "rundeck"
+  rundeckTag: "14.0"
+  replicaCount: 1
+  rundeckurl: "http://k8s-mygroup-8dfb8653fa-1274991415.us-west-2.elb.amazonaws.com/rundeck/"
+  pvc:
+    pvcRundeckData:
+      storageRequest: 10Gi
+    pvcRundeckLogs:
+      storageRequest: 10Gi
+    pvcRundeckPlgin:
+      storageRequest: 10Gi
+  regCredSecret:
+    dockerconfigjson: ""
+  rundeckHl:
+    ports:
+    - port: 80
+      targetPort: 4440
+    type: ClusterIP
+  myRundeckEnvironmentConfigmap:
+    rundeckGrailsUrl: http://k8s-mygroup-8dfb8653fa-1274991415.us-west-2.elb.amazonaws.com/rundeck
+    rundeckLoggingStrategy: CONSOLE
+    rundeckServerForwarded: "true"
+    rundeckcontextpath: "/rundeck/"
+  myRundeckNginxConfigmap:
+    nginxConf: |-
+      events {
+        worker_connections  1024;
+      }
+
+      http {
+          server {
+              location /healthz {
+                  return 204;
+                  access_log off;
+              }
+              location /rundeck/ {
+                  recursive_error_pages on;
+                  client_max_body_size 50M; # upload archives (backup/restore)
+                  proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+                  proxy_set_header X-Forwarded-Proto $scheme;
+                  proxy_set_header User-Agent $http_user_agent;
+                  proxy_pass http://localhost:4440/rundeck/;
+              }
+          }
+      }
+
+
+# This section represents values for 'authtoken' service
+authtoken
+  imageName: "iact-auth-token-scheduler-1.0"
+  imageTag: "latest"
+  keyvault_enabled: "true"
+  rundeck_url: "https://process-books.dna4.hclets.com"
+  alertmanagerurl: "http://alertmanager-hl.observe-ns.svc.cluster.local:9093/api/v1/alerts" 
+
+
+# This section represents values for 'alertmanager' service
+alertmanager
+  imageName: "docker.io/bitnami/alertmanager"
+  imageTag: "latest"
+  replicaCount: 1
+  imagePullPolicy: IfNotPresent

@@ -1,76 +1,76 @@
-kubernetesClusterDomain: cluster.local
-
-# 'serviceAccountName' is the name of service account used to apply secret manager IAM policy
-serviceAccountName: iona-demo-sa
-
-# 'secretName' is the name defined to secrets in secretproviderclass template at spec.secretName
-secretName: "mysecret01"
-
-# 'secretProviderClass' is the name of the secret provider class created in the same namespace
-secretProviderClass: "aws-secrets"
-
-# 'storageClassName' is the type of the storage class being used in the deployment e.g. ebs, efs or gp2
-storageClassName: ebs-sc
-
-# 'rundeck_url' is the endpoint URL of the rundeck service
-rundeckurl: "http://k8s-mygroup-8dfb8653fa-1274991415.us-west-2.elb.amazonaws.com/rundeck/"
-
-# 'nginxImage' is the image name alongwith registry required for nginx base deployment
-nginxImage: "ionatestregistry.azurecr.io/nginx"
-
-# 'nginxTag' is the image tag for base nginx service e.g. latest
-nginxTag: "1.0"
-
-# 'nginxReplicas' is the desired number of replicas for nginx in the pod
-nginxReplicas: 1
-
-# 'rundeckImage' is the imageRegistry/imageName required for rundeck deployment
-rundeckImage: "ionatestregistry.azurecr.io/rundeck"
-
-# 'rundeckTag' is the imageTag for the rundeck image to be deployed e.g. latest
-rundeckTag: "14.0"
-
-# 'myRundeckEnvironmentConfigmap' section defines the env variables specific to rundeck
-myRundeckEnvironmentConfigmap:
-  rundeckGrailsUrl: http://k8s-mygroup-8dfb8653fa-1274991415.us-west-2.elb.amazonaws.com/rundeck
-  rundeckLoggingStrategy: CONSOLE
-  rundeckServerForwarded: "true"
-  rundeckcontextpath: "/rundeck/"
-myRundeckNginxConfigmap:
-  nginxConf: |-
-    events {
-      worker_connections  1024;
-    }
-
-    http {
-        server {
-            location /healthz {
-                return 204;
-                access_log off;
-            }
-            location /rundeck/ {
-                recursive_error_pages on;
-                client_max_body_size 50M; # upload archives (backup/restore)
-                proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
-                proxy_set_header X-Forwarded-Proto $scheme;
-                proxy_set_header User-Agent $http_user_agent;
-                proxy_pass http://localhost:4440/rundeck/;
-            }
-        }
-    }
-
-# 'pvc' section defined the PVCs to be created alongwith deployment that are attached to the pod and mountPath needs to defined in deployment manifest itself
-pvc:
-  pvcRundeckData:
-    storageRequest: 10Gi
-  pvcRundeckLogs:
-    storageRequest: 10Gi
-  pvcRundeckPlgin:
-    storageRequest: 10Gi
-regCredSecret:
-  dockerconfigjson: ""
-rundeckHl:
-  ports:
-  - port: 80
-    targetPort: 4440
-  type: ClusterIP
+#kubernetesClusterDomain: cluster.local
+#
+## 'serviceAccountName' is the name of service account used to apply secret manager IAM policy
+#serviceAccountName: iona-demo-sa
+#
+## 'secretName' is the name defined to secrets in secretproviderclass template at spec.secretName
+#secretName: "mysecret01"
+#
+## 'secretProviderClass' is the name of the secret provider class created in the same namespace
+#secretProviderClass: "aws-secrets"
+#
+## 'storageClassName' is the type of the storage class being used in the deployment e.g. ebs, efs or gp2
+#storageClassName: ebs-sc
+#
+## 'rundeck_url' is the endpoint URL of the rundeck service
+#rundeckurl: "http://k8s-mygroup-8dfb8653fa-1274991415.us-west-2.elb.amazonaws.com/rundeck/"
+#
+## 'nginxImage' is the image name alongwith registry required for nginx base deployment
+#nginxImage: "ionatestregistry.azurecr.io/nginx"
+#
+## 'nginxTag' is the image tag for base nginx service e.g. latest
+#nginxTag: "1.0"
+#
+## 'nginxReplicas' is the desired number of replicas for nginx in the pod
+#nginxReplicas: 1
+#
+## 'rundeckImage' is the imageRegistry/imageName required for rundeck deployment
+#rundeckImage: "ionatestregistry.azurecr.io/rundeck"
+#
+## 'rundeckTag' is the imageTag for the rundeck image to be deployed e.g. latest
+#rundeckTag: "14.0"
+#
+## 'myRundeckEnvironmentConfigmap' section defines the env variables specific to rundeck
+#myRundeckEnvironmentConfigmap:
+#  rundeckGrailsUrl: http://k8s-mygroup-8dfb8653fa-1274991415.us-west-2.elb.amazonaws.com/rundeck
+#  rundeckLoggingStrategy: CONSOLE
+#  rundeckServerForwarded: "true"
+#  rundeckcontextpath: "/rundeck/"
+#myRundeckNginxConfigmap:
+#  nginxConf: |-
+#    events {
+#      worker_connections  1024;
+#    }
+#
+#    http {
+#        server {
+#            location /healthz {
+#                return 204;
+#                access_log off;
+#            }
+#            location /rundeck/ {
+#                recursive_error_pages on;
+#                client_max_body_size 50M; # upload archives (backup/restore)
+#                proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+#                proxy_set_header X-Forwarded-Proto $scheme;
+#                proxy_set_header User-Agent $http_user_agent;
+#                proxy_pass http://localhost:4440/rundeck/;
+#            }
+#        }
+#    }
+#
+## 'pvc' section defined the PVCs to be created alongwith deployment that are attached to the pod and mountPath needs to defined in deployment manifest itself
+#pvc:
+#  pvcRundeckData:
+#    storageRequest: 10Gi
+#  pvcRundeckLogs:
+#    storageRequest: 10Gi
+#  pvcRundeckPlgin:
+#    storageRequest: 10Gi
+#regCredSecret:
+#  dockerconfigjson: ""
+#rundeckHl:
+#  ports:
+#  - port: 80
+#    targetPort: 4440
+#  type: ClusterIP

@@ -8,4 +8,4 @@ metadata:
     meta.helm.sh/release-name: my-rundeck
     meta.helm.sh/release-namespace: act-ns
 data:
-  nginx.conf: {{ .Values.myRundeckNginxConfigmap.nginxConf | quote }}
+  nginx.conf: {{ .Values.rundeck.myRundeckNginxConfigmap.nginxConf | quote }}

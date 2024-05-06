@@ -10,4 +10,4 @@ spec:
   storageClassName: {{ .Values.storageClassName }}
   resources:
     requests:
-      storage: {{ .Values.pvc.pvcRundeckData.storageRequest | quote }}
+      storage: {{ .Values.rundeck.pvc.pvcRundeckData.storageRequest | quote }}

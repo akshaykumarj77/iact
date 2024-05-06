@@ -1,116 +1,99 @@
+bases:
+  - ./environments.yaml
+
+hooks:
+  - events: ["presync"]
+    showlogs: true
+    command: "kubectl"
+    args:
+      - "apply"
+      - "-f"
+      - "./others/*.yaml"
+	  
 ---
+templates:
+  commonvariables: &commonvariables
+    installed: true
+    values:
+    - ./{{`{{ .Environment.Name }}`}}.yaml
+
 releases:
 
   - name: postgres
     namespace: datahub-ns
     chart: ./postgres-helm/
-    installed: true
-    wait: true
-    timeout: 120
-    hooks:
-      - events: ["presync"]
-        showlogs: true
-        command: "kubectl"
-        args:
-          - "apply"
-          - "-f"
-          - "./others/*.yaml"
+    <<: *commonvariables
 
   - name: cp-kafka
     namespace: core-ns
     chart: ./kafka-helm/
-    installed: true
-    wait: true
-    timeout: 300
-    needs: 
-    - datahub-ns/postgres
+    <<: *commonvariables
 
   - name: topic
     namespace: core-ns
     chart: ./topic-helm/
-    installed: true
-    wait: true
-    timeout: 20
+    <<: *commonvariables
     needs: 
     - core-ns/cp-kafka
 
   - name: pgclient
     namespace: datahub-ns
     chart: ./database-helm/
-    installed: true
-    wait: true
-    timeout: 20
+    <<: *commonvariables
     needs:
-    - core-ns/cp-kafka
+    - datahub-ns/postgres
 
   - name: snowmapper
     namespace: act-ns
     chart: ./snowmapper-helm/
-    installed: true
-    wait: true
-    timeout: 20
+    <<: *commonvariables
     needs:
     - core-ns/cp-kafka
+    - datahub-ns/postgres
 
   - name: script-finder
     namespace: act-ns
     chart: ./script-finder-helm/
-    installed: true
-    wait: true
-    timeout: 20
+    <<: *commonvariables
     needs:
-    - act-ns/snowmapper
+    - core-ns/cp-kafka
+    - datahub-ns/postgres
 
   - name: command-executor
     namespace: act-ns
     chart: ./command-executor-helm/
-    installed: true
-    wait: true
-    timeout: 20
+    <<: *commonvariables
     needs:
-    - act-ns/snowmapper
+    - core-ns/cp-kafka
+    - datahub-ns/postgres
 
   - name: ansible
     namespace: act-ns
     chart: ./ansible-helm/
-    installed: true
-    wait: true
-    timeout: 20
-    needs:
-    - core-ns/cp-kafka
+    <<: *commonvariables
 
   - name: python
     namespace: act-ns
     chart: ./python-helm/
-    installed: true
-    wait: true
-    timeout: 20
-    needs:
-    - core-ns/cp-kafka
+    <<: *commonvariables
 
   - name: rundeck
     namespace: act-ns
     chart: ./rundeck-helm/
-    installed: true
-    wait: true
-    timeout: 20
+    <<: *commonvariables
     needs:
+    - core-ns/cp-kafka
     - act-ns/python
+    - act-ns/ansible
 
-  - name: authtoken
-    namespace: act-ns
-    chart: ./auth-scheduler-helm/
-    installed: true
-    wait: true
-    timeout: 20
-    needs:
-    - act-ns/rundeck
+  #- name: authtoken
+    #namespace: act-ns
+    #chart: ./auth-scheduler-helm/
+    #<<: *commonvariables
+    #needs:
+    #- act-ns/rundeck
 
   - name: alertmanager
     namespace: observe-ns
     chart: ./alertmanager-helm/
-    installed: true
-    wait: true
-    timeout: 20
-    needs:
-    - act-ns/rundeck
+    <<: *commonvariables

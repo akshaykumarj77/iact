@@ -9,4 +9,4 @@ spec:
   storageClassName: {{ .Values.storageClassName }}
   resources:
     requests:
-      storage: {{ .Values.pvc.pvcAnsibleSsh.storageRequest | quote }}
+      storage: {{ .Values.ansible.pvc.pvcAnsibleSsh.storageRequest | quote }}

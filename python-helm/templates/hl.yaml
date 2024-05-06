@@ -5,9 +5,9 @@ metadata:
   labels:
     app: python
 spec:
-  type: {{ .Values.hl.type }}
+  type: {{ .Values.python.hl.type }}
   clusterIP: None
   selector:
     app: python
   ports:
-	{{- .Values.hl.ports | toYaml | nindent 2 -}}
+	{{- .Values.python.hl.ports | toYaml | nindent 2 -}}

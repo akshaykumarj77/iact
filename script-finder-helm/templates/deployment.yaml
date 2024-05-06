@@ -1,14 +1,14 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ .Values.appName }}
+  name: iact-scriptfinder
   labels:
-       name: {{ .Values.appName }}
+       name: iact-scriptfinder
 spec:
-  replicas: {{ .Values.replicaCount }}
+  replicas: {{ .Values.script-finder.replicaCount }}
   selector:
     matchLabels:
-      name: {{ .Values.appName }}
+      name: iact-scriptfinder
   template:
     metadata:
       annotations:
@@ -17,8 +17,8 @@ spec:
         sidecar.istio.io/proxyMemory: "128Mi"
         sidecar.istio.io/proxyMemoryLimit: "1Gi"
       labels:
-        name: {{ .Values.appName }}
-        app: {{ .Values.appName }}
+        name: iact-scriptfinder
+        app: iact-scriptfinder
         version: 1.0.0
     spec:
       serviceAccountName: {{ .Values.serviceAccountName }}
@@ -43,10 +43,10 @@ spec:
               name: {{ .Values.secretName }}
         - name: KUBERNETES_CLUSTER_DOMAIN
           value: {{ .Values.kubernetesClusterDomain }}
-        image: {{ .Values.imageRegistry }}{{ .Values.imageName }}:{{ .Values.imageTag | default .Chart.AppVersion }}
+        image: {{ .Values.imageRegistry }}{{ .Values.script-finder.imageName }}:{{ .Values.script-finder.imageTag | default .Chart.AppVersion }}
         imagePullPolicy: IfNotPresent
         name: iact-scriptfinder
-        resources: {{- toYaml .Values.iactScriptfinder.iactScriptfinder.resources | nindent
+        resources: {{- toYaml .Values.script-finder.iactScriptfinder.iactScriptfinder.resources | nindent
           10 }}
         securityContext:
           readOnlyRootFilesystem: true

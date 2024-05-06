@@ -10,7 +10,7 @@ metadata:
     {{- toYaml . | nindent 4 }}
   {{- end }}
 spec:
-  replicas: {{ .Values.replicaCount }}
+  replicas: {{ .Values.alertmanager.replicaCount }}
   selector:
     matchLabels:
       {{- include "alertmanager.selectorLabels" . | nindent 6 }}
@@ -115,12 +115,12 @@ spec:
         - name: {{ .Chart.Name }}
           securityContext:
             {{- toYaml .Values.securityContext | nindent 12 }}
-          image: "{{ .Values.imageRegistry }}{{ .Values.imageName }}:{{ .Values.imageTag | default .Chart.AppVersion }}"
+          image: "{{ .Values.alertmanager.imageName }}:{{ .Values.alertmanager.imageTag | default .Chart.AppVersion }}"
           securityContext:
             readOnlyRootFilesystem: true
             runAsNonRoot: true
             runAsUser: 65534 
-          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          imagePullPolicy: {{ .Values.alertmanager.imagePullPolicy }}
           env:
             - name: POD_IP
               valueFrom:
@@ -137,13 +137,13 @@ spec:
           args:
             - --storage.path=/alertmanager
             - --config.file=/etc/alertmanager/alertmanager.yml
-            {{- if or (gt (int .Values.replicaCount) 1) (.Values.additionalPeers) }}
+            {{- if or (gt (int .Values.alertmanager.replicaCount) 1) (.Values.additionalPeers) }}
             - --cluster.advertise-address=[$(POD_IP)]:{{ $svcClusterPort }}
             - --cluster.listen-address=0.0.0.0:{{ $svcClusterPort }}
             {{- end }}
-            {{- if gt (int .Values.replicaCount) 1}}
+            {{- if gt (int .Values.alertmanager.replicaCount) 1}}
             {{- $fullName := include "alertmanager.fullname" . }}
-            {{- range $i := until (int .Values.replicaCount) }}
+            {{- range $i := until (int .Values.alertmanager.replicaCount) }}
             - --cluster.peer={{ $fullName }}-{{ $i }}.{{ $fullName }}-headless:{{ $svcClusterPort }}
             {{- end }}
             {{- end }}

@@ -14,7 +14,7 @@ data:
         transformer-config:
           customtransform:
             classname: "com.hcl.iAct.Executor"
-            config: "{\"db_url\": \"{{ .Values.db_url }}\", \"rundeck_user\":\"{{ .Values.rundeck_user }}\",  \"db_minidle\": 1, \"db_maxpoolsize\": 2,\"rundeck_url\":\"{{ .Values.rundeckurl }}\", \"alertmanagerurl\":\"{{ .Values.alertmanagerurl }}\"}"
+            config: "{\"db_url\": \"{{ .Values.db_url }}\", \"rundeck_user\":\"{{ .Values.command-executor.rundeck_user }}\",  \"db_minidle\": 1, \"db_maxpoolsize\": 2,\"rundeck_url\":\"{{ .Values.command-executor.rundeckurl }}\", \"alertmanagerurl\":\"{{ .Values.command-executor.alertmanagerurl }}\"}"
 kind:  ConfigMap
 metadata:
   name: command-executors-config

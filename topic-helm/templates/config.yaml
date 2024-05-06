@@ -5,4 +5,4 @@ metadata:
   labels:
   {{- include "topic-helm.labels" . | nindent 4 }}
 data:
-  kafka.sh: {{ .Values.config.kafkaSh | quote }}
+  kafka.sh: {{ .Values.topic.config.kafkaSh | quote }}

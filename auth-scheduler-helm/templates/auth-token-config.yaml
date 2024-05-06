@@ -7,7 +7,7 @@ data:
     {
       "db_url": "{{ .Values.db_url }}",
       "db_driver": "org.postgresql.Driver",
-      "rundeck_url" : "{{ .Values.rundeck_url }}",
-      "alertmanagerurl": "{{ .Values.alertmanagerurl }}",
-      "keyvault_enabled": "{{ .Values.keyvault_enabled }}" 
+      "rundeck_url" : "{{ .Values.authtoken.rundeck_url }}",
+      "alertmanagerurl": "{{ .Values.authtoken.alertmanagerurl }}",
+      "keyvault_enabled": "{{ .Values.authtoken.keyvault_enabled }}" 
     }

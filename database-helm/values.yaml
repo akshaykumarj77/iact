@@ -1,35 +1,35 @@
-kubernetesClusterDomain: cluster.local
-
-# 'imageRegistry' is the url of registry from which images needs to be pulled e.g. ECR, docker.io, etc
-imageRegistry: "ionatestregistry.azurecr.io/"
-
-# 'imageName' is the name of image to be pulled from 'imageRegistry'
-imageName: "cronjob"
-
-# 'imageTag' that needs to be pulled and deployed in the current deployment e.g. latest
-imageTag: "2.0"
-
-postgres:
-    #image:
-      #repository: "ionatestregistry.azurecr.io/cronjob"
-      #tag: "2.0"
-    resources:
-      limits:
-        cpu: 2m
-        memory: 70Mi
-      requests:
-        cpu: 1m
-        memory: 50Mi
-onfig:
-  runtimeConfigSh: |
-    #!/bin/ash
-    export PGPASSWORD='Abcd1234'
-    database="admindb"
-    
-    echo "Connecting to pgsql admindb database using adminuser"
-    psql -h postgres.datahub-ns.svc.cluster.local -p 5432 -U adminuser -d admindb -c "CREATE ROLE iona_svc LOGIN PASSWORD 'Abcd1234';"
-    #psql -h postgres.datahub-ns.svc.cluster.local -p 5432 -U adminuser -d admindb -c "CREATE DATABASE grafanadb WITH OWNER = iona_svc;"
-    psql -h postgres.datahub-ns.svc.cluster.local -p 5432 -U adminuser -d admindb -c "CREATE DATABASE iact WITH OWNER = iona_svc;"
-    #psql -h postgres.datahub-ns.svc.cluster.local -p 5432 -U adminuser -d admindb -c "CREATE DATABASE kyle WITH OWNER = iona_svc;"
-    psql -h postgres.datahub-ns.svc.cluster.local -p 5432 -U adminuser -d admindb -c "CREATE DATABASE rundeck WITH OWNER = iona_svc;"
-    psql -h postgres.datahub-ns.svc.cluster.local -p 5432 -U iona_svc -d iact -f /database/iact.sql
+#kubernetesClusterDomain: cluster.local
+#
+## 'imageRegistry' is the url of registry from which images needs to be pulled e.g. ECR, docker.io, etc
+#imageRegistry: "ionatestregistry.azurecr.io/"
+#
+## 'imageName' is the name of image to be pulled from 'imageRegistry'
+#imageName: "cronjob"
+#
+## 'imageTag' that needs to be pulled and deployed in the current deployment e.g. latest
+#imageTag: "2.0"
+#
+#postgres:
+#    #image:
+#      #repository: "ionatestregistry.azurecr.io/cronjob"
+#      #tag: "2.0"
+#    resources:
+#      limits:
+#        cpu: 2m
+#        memory: 70Mi
+#      requests:
+#        cpu: 1m
+#        memory: 50Mi
+#onfig:
+#  runtimeConfigSh: |
+#    #!/bin/ash
+#    export PGPASSWORD='Abcd1234'
+#    database="admindb"
+#    
+#    echo "Connecting to pgsql admindb database using adminuser"
+#    psql -h postgres.datahub-ns.svc.cluster.local -p 5432 -U adminuser -d admindb -c "CREATE ROLE iona_svc LOGIN PASSWORD 'Abcd1234';"
+#    #psql -h postgres.datahub-ns.svc.cluster.local -p 5432 -U adminuser -d admindb -c "CREATE DATABASE grafanadb WITH OWNER = iona_svc;"
+#    psql -h postgres.datahub-ns.svc.cluster.local -p 5432 -U adminuser -d admindb -c "CREATE DATABASE iact WITH OWNER = iona_svc;"
+#    #psql -h postgres.datahub-ns.svc.cluster.local -p 5432 -U adminuser -d admindb -c "CREATE DATABASE kyle WITH OWNER = iona_svc;"
+#    psql -h postgres.datahub-ns.svc.cluster.local -p 5432 -U adminuser -d admindb -c "CREATE DATABASE rundeck WITH OWNER = iona_svc;"
+#    psql -h postgres.datahub-ns.svc.cluster.local -p 5432 -U iona_svc -d iact -f /database/iact.sql

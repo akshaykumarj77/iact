@@ -10,4 +10,4 @@ spec:
   storageClassName: {{ .Values.storageClassName }}
   resources:
     requests:
-      storage: {{ .Values.pvc.pvcIactScripts.storageRequest | quote }}
+      storage: {{ .Values.python.pvc.pvcIactScripts.storageRequest | quote }}

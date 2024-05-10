@@ -7,7 +7,7 @@ data:
         schema.registry.url: http://host.docker.internal:8084
         default.key.serde: org.apache.kafka.common.serialization.Serdes$StringSerde
         default.value.serde: org.apache.kafka.common.serialization.Serdes$StringSerde
-        bootstrap.servers: cp-kafka.core-ns.svc.cluster.local:9092
+        bootstrap.servers: {{ .Values.snowmapper.kafkaserver }}
       replication.factor: 1
       metrics.recording.level: DEBUG
       statestore:

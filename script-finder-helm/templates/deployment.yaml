@@ -5,7 +5,7 @@ metadata:
   labels:
        name: iact-scriptfinder
 spec:
-  replicas: {{ .Values.script-finder.replicaCount }}
+  replicas: {{ .Values.scriptfinder.replicaCount }}
   selector:
     matchLabels:
       name: iact-scriptfinder
@@ -43,10 +43,10 @@ spec:
               name: {{ .Values.secretName }}
         - name: KUBERNETES_CLUSTER_DOMAIN
           value: {{ .Values.kubernetesClusterDomain }}
-        image: {{ .Values.imageRegistry }}{{ .Values.script-finder.imageName }}:{{ .Values.script-finder.imageTag | default .Chart.AppVersion }}
+        image: {{ .Values.imageRegistry }}{{ .Values.scriptfinder.imageName }}:{{ .Values.scriptfinder.imageTag | default .Chart.AppVersion }}
         imagePullPolicy: IfNotPresent
         name: iact-scriptfinder
-        resources: {{- toYaml .Values.script-finder.iactScriptfinder.iactScriptfinder.resources | nindent
+        resources: {{- toYaml .Values.scriptfinder.iactScriptfinder.iactScriptfinder.resources | nindent
           10 }}
         securityContext:
           readOnlyRootFilesystem: true

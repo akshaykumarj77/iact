@@ -157,7 +157,7 @@ spec:
       containers:
         - name: kafka
           image: {{ include "kafka.image" . }}
-          imagePullPolicy: {{ .Values.cp-kafka.image.pullPolicy | quote }}
+          imagePullPolicy: {{ .Values.image.pullPolicy | quote }}
           {{- if .Values.containerSecurityContext.enabled }}
           securityContext: {{- omit .Values.containerSecurityContext "enabled" | toYaml | nindent 12 }}
           {{- end }}
@@ -173,7 +173,7 @@ spec:
           {{- end }}
           env:
             - name: BITNAMI_DEBUG
-              value: {{ ternary "true" "false" (or .Values.cp-kafka.image.debug .Values.diagnosticMode.enabled) | quote }}
+              value: {{ ternary "true" "false" (or .Values.image.debug .Values.diagnosticMode.enabled) | quote }}
             - name: MY_POD_IP
               valueFrom:
                 fieldRef:

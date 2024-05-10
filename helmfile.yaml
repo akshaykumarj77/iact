@@ -1,21 +1,14 @@
-bases:
-  - ./environments.yaml
+{{ readFile "./environments.yaml" }}
 
-hooks:
-  - events: ["presync"]
-    showlogs: true
-    command: "kubectl"
-    args:
-      - "apply"
-      - "-f"
-      - "./others/*.yaml"
-	  
+bases:
+  - environments.yaml
+
 ---
 templates:
   commonvariables: &commonvariables
     installed: true
     values:
-    - ./{{`{{ .Environment.Name }}`}}.yaml
+    - ./{{ .Environment.Name }}.yaml
 
 releases:
 
@@ -23,8 +16,16 @@ releases:
     namespace: datahub-ns
     chart: ./postgres-helm/
     <<: *commonvariables
+    hooks:
+      - events: ["presync"]
+        showlogs: true
+        command: "kubectl"
+        args:
+          - "apply"
+          - "-f"
+          - "./others/*.yaml"
 
-  - name: cp-kafka
+  - name: kafka
     namespace: core-ns
     chart: ./kafka-helm/
     <<: *commonvariables
@@ -34,7 +35,7 @@ releases:
     chart: ./topic-helm/
     <<: *commonvariables
     needs: 
-    - core-ns/cp-kafka
+    - core-ns/kafka
 
   - name: pgclient
     namespace: datahub-ns
@@ -48,23 +49,23 @@ releases:
     chart: ./snowmapper-helm/
     <<: *commonvariables
     needs:
-    - core-ns/cp-kafka
+    - core-ns/kafka
     - datahub-ns/postgres
 
-  - name: script-finder
+  - name: scriptfinder
     namespace: act-ns
     chart: ./script-finder-helm/
     <<: *commonvariables
     needs:
-    - core-ns/cp-kafka
+    - core-ns/kafka
     - datahub-ns/postgres
 
-  - name: command-executor
+  - name: commandexecutor
     namespace: act-ns
     chart: ./command-executor-helm/
     <<: *commonvariables
     needs:
-    - core-ns/cp-kafka
+    - core-ns/kafka
     - datahub-ns/postgres
 
   - name: ansible
@@ -82,7 +83,7 @@ releases:
     chart: ./rundeck-helm/
     <<: *commonvariables
     needs:
-    - core-ns/cp-kafka
+    - core-ns/kafka
     - act-ns/python
     - act-ns/ansible
 

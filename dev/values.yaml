@@ -47,13 +47,20 @@ postgres:
   keyVaultName: ""
 
 
-# This section represents values for 'kafka' service
-#kafka:
-  #replicaCount: 1
-
-# This section represents values for 'zookeeper' component of kafka service
-#zookeeper:
-  #replicaCount: 1
+# This section represents values for 'cp-kafka' service
+kafka:
+  image:
+    registry: docker.io
+    repository: bitnami/kafka
+    tag: 3.4.0-debian-11-r15
+    digest: ""
+    pullPolicy: Always
+    pullSecrets:
+    - acrsecret2
+    debug: false
+  replicaCount: 1
+  zookeeper:
+    replicaCount: 1
 
 
 # This section represents values for 'topic'
@@ -66,15 +73,15 @@ topic:
       #!/bin/bash
       # kafka_2.13-3.4.0
       # export KAFKA_OPTS="-Djava.security.auth.login.config=/tmp/kafka_jass.conf"
-      #/tmp/kafka_2.13-3.4.0/bin/kafka-topics.sh --create --bootstrap-server=kafka.core-ns.svc.cluster.local:9092 --topic alerttopic --partitions 3 --replication-factor 1
-      #/tmp/kafka_2.13-3.4.0/bin/kafka-topics.sh --create --bootstrap-server=kafka.core-ns.svc.cluster.local:9092 --topic alertprocessedtopic  --partitions 3 --replication-factor 1
-      #/tmp/kafka_2.13-3.4.0/bin/kafka-topics.sh --create --bootstrap-server=kafka.core-ns.svc.cluster.local:9092 --topic glpitopic  --partitions 3 --replication-factor 1
-      #/tmp/kafka_2.13-3.4.0/bin/kafka-topics.sh --create --bootstrap-server=kafka.core-ns.svc.cluster.local:9092 --topic resetalerttopic  --partitions 3 --replication-factor 1
-      #/tmp/kafka_2.13-3.4.0/bin/kafka-topics.sh --create --bootstrap-server=kafka.core-ns.svc.cluster.local:9092 --topic resetalerttopicop  --partitions 3 --replication-factor 1
-      /tmp/kafka_2.13-3.4.0/bin/kafka-topics.sh --create --bootstrap-server=kafka.core-ns.svc.cluster.local:9092 --topic rundecktopic  --partitions 3 --replication-factor 1
-      /tmp/kafka_2.13-3.4.0/bin/kafka-topics.sh --create --bootstrap-server=kafka.core-ns.svc.cluster.local:9092 --topic rundecktopicop  --partitions 3 --replication-factor 1
-      /tmp/kafka_2.13-3.4.0/bin/kafka-topics.sh --create --bootstrap-server=kafka.core-ns.svc.cluster.local:9092 --topic scripttopic  --partitions 3 --replication-factor 1
-      /tmp/kafka_2.13-3.4.0/bin/kafka-topics.sh --create --bootstrap-server=kafka.core-ns.svc.cluster.local:9092 --topic snowtopic  --partitions 3 --replication-factor 1
+      #/tmp/kafka_2.13-3.4.0/bin/kafka-topics.sh --create --bootstrap-server=cp-kafka.core-ns.svc.cluster.local:9092 --topic alerttopic --partitions 3 --replication-factor 1
+      #/tmp/kafka_2.13-3.4.0/bin/kafka-topics.sh --create --bootstrap-server=cp-kafka.core-ns.svc.cluster.local:9092 --topic alertprocessedtopic  --partitions 3 --replication-factor 1
+      #/tmp/kafka_2.13-3.4.0/bin/kafka-topics.sh --create --bootstrap-server=cp-kafka.core-ns.svc.cluster.local:9092 --topic glpitopic  --partitions 3 --replication-factor 1
+      #/tmp/kafka_2.13-3.4.0/bin/kafka-topics.sh --create --bootstrap-server=cp-kafka.core-ns.svc.cluster.local:9092 --topic resetalerttopic  --partitions 3 --replication-factor 1
+      #/tmp/kafka_2.13-3.4.0/bin/kafka-topics.sh --create --bootstrap-server=cp-kafka.core-ns.svc.cluster.local:9092 --topic resetalerttopicop  --partitions 3 --replication-factor 1
+      /tmp/kafka_2.13-3.4.0/bin/kafka-topics.sh --create --bootstrap-server=cp-kafka.core-ns.svc.cluster.local:9092 --topic rundecktopic  --partitions 3 --replication-factor 1
+      /tmp/kafka_2.13-3.4.0/bin/kafka-topics.sh --create --bootstrap-server=cp-kafka.core-ns.svc.cluster.local:9092 --topic rundecktopicop  --partitions 3 --replication-factor 1
+      /tmp/kafka_2.13-3.4.0/bin/kafka-topics.sh --create --bootstrap-server=cp-kafka.core-ns.svc.cluster.local:9092 --topic scripttopic  --partitions 3 --replication-factor 1
+      /tmp/kafka_2.13-3.4.0/bin/kafka-topics.sh --create --bootstrap-server=cp-kafka.core-ns.svc.cluster.local:9092 --topic snowtopic  --partitions 3 --replication-factor 1
 
 
 # This section represents values for 'pgclient' service
@@ -112,7 +119,7 @@ snowmapper:
   root_drl_path: "iactbucket/iona/iAct/Adapter/decision-service.drl"
   keyvault_enabled: "true"
   miniourl: "http://minio.minio-ns.svc.cluster.local:9000"
-  kafkaserver: "kafka.core-ns.svc.cluster.local:9092"
+  kafkaserver: "cp-kafka.core-ns.svc.cluster.local:9092"
   keyserializer: "org.apache.kafka.common.serialization.StringSerializer"
   valueserializer: "org.apache.kafka.common.serialization.StringSerializer"
   alertmanagerurl: "http://alertmanager-hl.observe-ns.svc.cluster.local:9093/api/v1/alerts"
@@ -135,7 +142,7 @@ scriptfinder:
   storage_type: "s3"
   keyvault_enabled: "true"
   miniourl: "http://minio.minio-ns.svc.cluster.local:9000"
-  kafkaserver: "kafka.core-ns.svc.cluster.local:9092"
+  kafkaserver: "cp-kafka.core-ns.svc.cluster.local:9092"
   keyserializer: "org.apache.kafka.common.serialization.StringSerializer"
   valueserializer: "org.apache.kafka.common.serialization.StringSerializer"
   alertmanagerurl: "http://alertmanager-hl.observe-ns.svc.cluster.local:9093/api/v1/alerts"

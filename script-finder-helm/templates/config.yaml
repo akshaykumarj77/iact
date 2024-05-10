@@ -14,7 +14,7 @@ data:
        transformer-config:
          customtransform:
            classname: "com.hcl.iAct.Driver"
-           config: "{\"storage_type\": \"{{ .Values.script-finder.storage_type }}\",\"keyvault_enabled\": \"{{ .Values.script-finder.keyvault_enabled }}\",\"db_url\": \"{{ .Values.db_url }}\", \"db_minidle\": 1,\"db_maxpoolsize\": 2,\"cronschedule\":\"0 * * ? * *\", \"waittimelimit\":\"7200 SECONDS\", \"bootstrapserver\": \"{{ .Values.script-finder.kafkaserver }}\",\"topic\": \"rundecktopic\",\"keyserializer\": \"{{ .Values.script-finder.keyserializer }}\",\"valueserializer\": \"{{ .Values.script-finder.valueserializer }}\",\"miniourl\": \"{{ .Values.script-finder.miniourl }}\", \"alertmanagerurl\":\"{{ .Values.script-finder.alertmanagerurl }}\", \"kafka.ssl.enable\":\"false\"}"
+           config: "{\"storage_type\": \"{{ .Values.scriptfinder.storage_type }}\",\"keyvault_enabled\": \"{{ .Values.scriptfinder.keyvault_enabled }}\",\"db_url\": \"{{ .Values.db_url }}\", \"db_minidle\": 1,\"db_maxpoolsize\": 2,\"cronschedule\":\"0 * * ? * *\", \"waittimelimit\":\"7200 SECONDS\", \"bootstrapserver\": \"{{ .Values.scriptfinder.kafkaserver }}\",\"topic\": \"rundecktopic\",\"keyserializer\": \"{{ .Values.scriptfinder.keyserializer }}\",\"valueserializer\": \"{{ .Values.scriptfinder.valueserializer }}\",\"miniourl\": \"{{ .Values.scriptfinder.miniourl }}\", \"alertmanagerurl\":\"{{ .Values.scriptfinder.alertmanagerurl }}\", \"kafka.ssl.enable\":\"false\"}"
 kind:  ConfigMap
 metadata:
   name: scriptfinder-config

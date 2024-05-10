@@ -1,10 +1,10 @@
 environments:
   dev:
     values:
-    - dev.yaml
+    - ./dev.yaml
   preprod:
     values:
-    - preprod.yaml
+    - ./preprod.yaml
   prod:
     values:
-    - prod.yaml
+    - ./prod.yaml

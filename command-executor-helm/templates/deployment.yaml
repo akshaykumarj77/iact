@@ -5,7 +5,7 @@ metadata:
   labels:
     name: iact-command-executors
 spec:
-  replicas: {{ .Values.command-executor.replicaCount }}
+  replicas: {{ .Values.commandexecutor.replicaCount }}
   selector:
     matchLabels:
       name: iact-command-executors
@@ -34,10 +34,10 @@ spec:
               name: {{ .Values.secretName}}
         - name: KUBERNETES_CLUSTER_DOMAIN
           value: {{ .Values.kubernetesClusterDomain }}
-        image: {{ .Values.imageRegistry }}{{ .Values.command-executor.imageName }}:{{ .Values.command-executor.imageTag | default .Chart.AppVersion }}
+        image: {{ .Values.imageRegistry }}{{ .Values.commandexecutor.imageName }}:{{ .Values.commandexecutor.imageTag | default .Chart.AppVersion }}
         imagePullPolicy: IfNotPresent
         name: iact-command-executors
-        resources: {{- toYaml .Values.command-executor.iactCommandExecutors.iactCommandExecutors.resources
+        resources: {{- toYaml .Values.commandexecutor.iactCommandExecutors.iactCommandExecutors.resources
           | nindent 10 }}
         securityContext:
           readOnlyRootFilesystem: true

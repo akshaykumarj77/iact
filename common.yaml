@@ -1,0 +1,5 @@
+templates:
+  commonvariables: &commonvariables
+    installed: true
+    values:
+    - ./{{`{{ .Environment.Name }}`}}.yaml

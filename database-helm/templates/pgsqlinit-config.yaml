@@ -282,7 +282,7 @@ data:
               
     INSERT INTO public.external_configs (param_name,param_value) VALUES ('OPAURLForPermission','http://localhost:7020/v1/data'),('Rundeck_User_For_Token','IONA_ADMIN');
 
-    insert into executor_details(object_id, exec_file_name, exec_file_loc, exec_method, force_update, created_on, updated_on) Values(nextval('iact_sequence'), 'root_drool', 'iona/iAct/ScriptFinder/decision-service.drl', 'drools','', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
+    insert into executor_details(object_id, exec_file_name, exec_file_loc, exec_method, force_update, created_on, updated_on) Values(nextval('iact_sequence'), 'root_drool', 'iactbucket/iona/iAct/ScriptFinder/decision-service.drl', 'drools','', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
 
     insert into executor_details(object_id, exec_file_name, exec_file_loc, exec_method, force_update, created_on, updated_on) Values(nextval('iact_sequence'), 'checkmk', 'iona/iAct/ScriptFinder/checkmk.drl', 'drools','', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
 

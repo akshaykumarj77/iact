@@ -3,6 +3,14 @@
 bases:
   - environments.yaml
 
+hooks:
+- events: ["cleanup"]
+  showlogs: true
+  command: "rm"
+  args: 
+    - "-f"
+    - "./kafka-helm/Chart.lock"
+
 ---
 templates:
   commonvariables: &commonvariables

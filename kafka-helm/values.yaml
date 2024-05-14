@@ -75,19 +75,19 @@ diagnosticMode:
 ## @param image.debug Specify if debug values should be set
 ##
 image:
-  registry: docker.io
-  repository: bitnami/kafka
-  tag: 3.4.0-debian-11-r15
+  registry: 
+  repository: 
+  tag: 
         #  digest: ""
   # registry: odakscore.azurecr.io
   # repository: compliant/iona-bitnami-kafka
   # tag: latest
-  digest: ""
+  digest: 
   ## Specify a imagePullPolicy
   ## Defaults to 'Always' if image tag is 'latest', else set to 'IfNotPresent'
   ## ref: https://kubernetes.io/docs/user-guide/images/#pre-pulling-images
   ##
-  pullPolicy: Always
+  pullPolicy: 
   ## Optionally specify an array of imagePullSecrets.
   ## Secrets must be manually created in the namespace.
   ## ref: https://kubernetes.io/docs/tasks/configure-pod-container/pull-image-private-registry/
@@ -442,7 +442,7 @@ extraEnvVarsSecret: ""
 
 ## @param replicaCount Number of Kafka nodes
 ##
-replicaCount: 1
+replicaCount: 
 ## @param minBrokerId Minimal broker.id value, nodes increment their `broker.id` respectively
 ## Brokers increment their ID starting at this minimal value.
 ## E.g., with `minBrokerId=100` and 3 nodes, IDs will be 100, 101, 102 for brokers 0, 1, and 2, respectively.
@@ -1774,29 +1774,29 @@ kraft:
 zookeeper:
   ## @param zookeeper.enabled Switch to enable or disable the ZooKeeper helm chart. Must be false if you use Kraft mode.
   ##
-  enabled: true
+  enabled: 
   ## @param zookeeper.replicaCount Number of ZooKeeper nodes
   ##
-  replicaCount: 1
+  replicaCount: 
   ## ZooKeeper authenticaiton
   ##
   auth:
     client:
       ## @param zookeeper.auth.client.enabled Enable ZooKeeper auth
       ##
-      enabled: false
+      enabled: 
       ## @param zookeeper.auth.client.clientUser User that will use ZooKeeper clients to auth
       ##
-      clientUser: ""
+      clientUser:
       ## @param zookeeper.auth.client.clientPassword Password that will use ZooKeeper clients to auth
       ##
-      clientPassword: ""
+      clientPassword:
       ## @param zookeeper.auth.client.serverUsers Comma, semicolon or whitespace separated list of user to be created. Specify them as a string, for example: "user1,user2,admin"
       ##
-      serverUsers: ""
+      serverUsers:
       ## @param zookeeper.auth.client.serverPasswords Comma, semicolon or whitespace separated list of passwords to assign to users when created. Specify them as a string, for example: "pass4user1, pass4user2, pass4admin"
       ##
-      serverPasswords: ""
+      serverPasswords:
   ## ZooKeeper Persistence parameters
   ## ref: https://kubernetes.io/docs/user-guide/persistent-volumes/
   ## @param zookeeper.persistence.enabled Enable persistence on ZooKeeper using PVC(s)

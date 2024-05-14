@@ -26,6 +26,61 @@ serviceAccountName: iona-demo-sa
 # 'db_url' is the URL of the postgres database followed by port number and username
 db_url: "jdbc:postgresql://postgres.datahub-ns.svc.cluster.local:5432/iact"
 
+#######################This section represnts values for 'kafka' service########################
+image:
+  registry: docker.io
+  repository: bitnami/kafka
+  tag: 3.4.0-debian-11-r15
+  digest: ""
+  ## Specify a imagePullPolicy
+  ## Defaults to 'Always' if image tag is 'latest', else set to 'IfNotPresent'
+  ## ref: https://kubernetes.io/docs/user-guide/images/#pre-pulling-images
+  pullPolicy: Always
+  ## Optionally specify an array of imagePullSecrets.
+  ## Secrets must be manually created in the namespace.
+  pullSecrets:
+      - acrsecret2
+  ## Set to true if you would like to see extra information on logs
+  debug: false
+##replicaCount Number of Kafka nodes
+replicaCount: 1
+
+## @section ZooKeeper chart parameters
+## ZooKeeper chart configuration
+
+zookeeper:
+  ## @param zookeeper.enabled Switch to enable or disable the ZooKeeper helm chart. Must be false if you use Kraft mode.
+  enabled: true
+  ## Bitnami ZooKeeper image version
+  image:
+    registry: docker.io
+    repository: bitnami/zookeeper
+    tag: "3.8.1-debian-11-r15"
+    digest: ""
+    ## Specify a imagePullPolicy
+    ## Defaults to 'Always' if image tag is 'latest', else set to 'IfNotPresent'
+    pullPolicy: Always
+    ## Secrets must be manually created in the namespace.
+    pullSecrets:
+      - acrsecret2 
+    debug: false
+
+  ## @param zookeeper.replicaCount Number of ZooKeeper nodes
+  replicaCount: 1
+  ## ZooKeeper authentication
+  auth:
+    client:
+      ## @param zookeeper.auth.client.enabled Enable ZooKeeper auth
+      enabled: false
+      ## @param zookeeper.auth.client.clientUser User that will use ZooKeeper clients to auth
+      clientUser: ""
+      ## @param zookeeper.auth.client.clientPassword Password that will use ZooKeeper clients to auth
+      clientPassword: ""
+      ## @param zookeeper.auth.client.serverUsers Comma, semicolon or whitespace separated list of user to be created. Specify them as a string, for example: "user1,user2,admin"
+      serverUsers: ""
+      ## @param zookeeper.auth.client.serverPasswords Comma, semicolon or whitespace separated list of passwords to assign to users when created. Specify them as a string, for example: "pass4user1, pass4user2, pass4admin"
+      serverPasswords: ""
+
 
 # This section represents values for 'postgres' service
 postgres:
@@ -45,15 +100,6 @@ postgres:
       cpu: "9m"
       memory: "150Mi"
   keyVaultName: ""
-
-
-# This section represents values for 'kafka' service
-#kafka:
-  #replicaCount: 1
-
-# This section represents values for 'zookeeper' component of kafka service
-#zookeeper:
-  #replicaCount: 1
 
 
 # This section represents values for 'topic'

@@ -4,13 +4,15 @@ bases:
   - environments.yaml
 
 hooks:
-- events: ["cleanup"]
+- events: ["prepare"]
   showlogs: true
-  command: "rm"
-  args: 
-    - "-f"
-    - "./kafka-helm/Chart.lock"
-
+  command: "chmod"
+  args:
+    - "+x"
+    - "prerequisite.sh"
+- events: ["prepare"]
+  showlogs: true
+  command: "./prerequisite.sh"
 ---
 templates:
   commonvariables: &commonvariables
@@ -24,14 +26,6 @@ releases:
     namespace: datahub-ns
     chart: ./postgres-helm/
     <<: *commonvariables
-    hooks:
-      - events: ["presync"]
-        showlogs: true
-        command: "kubectl"
-        args:
-          - "apply"
-          - "-f"
-          - "./others/*.yaml"
 
   - name: kafka
     namespace: core-ns

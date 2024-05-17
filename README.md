@@ -42,7 +42,33 @@ Use the built-in continuous integration in GitLab.
 - [ ] [Use pull-based deployments for improved Kubernetes management](https://docs.gitlab.com/ee/user/clusters/agent/)
 - [ ] [Set up protected environments](https://docs.gitlab.com/ee/ci/environments/protected_environments.html)
 
-***
+# Helmfile
+Helmfile is a declarative spec for deploying helm charts. It lets you 
+- Keep a directory of chart value files and maintain changes in version control.
+- Apply CI/CD to configuration changes.
+- Periodically sync to avoid skew in environments.
+
+We need to add the desired state of applications and services in '**helmfile.yaml**'. In this helmfile, we have added 4 modules i.e. bases, hooks, templates and releases, also added the needs to add dependency in services. 
+
+The **values** for each component is defined in dev.yaml, preprod.yaml and prod.yaml depending upon the environment in which the services needs to be deployed. Use the below command to deploy all helm charts:
+helmfile --environment <dev> apply   # make sure that you change the environment
+
+# Steps for Deployment
+Make the required changes in below files
+- **prerequisite.sh**: runs before the deployment to install prerequisites i.e. namespaces, Secret Manager, EBS add-on, deploy secretproviderclass and service accounts in desired namespaces and clean-up of Chart.lock file.
+
+1. Add the namespaces to be created, 2. Add the Container Registry secrets required to pull the images, 3. Creating the Amazon EBS CSI Driver Add-on with IAM Role, 4. Deploying Storage Class Manifest, 5. Installing Secret Manager CSI, 6. Deploying Service Accounts & Secret Provider Class in All Namespaces and 7. Add any clean-up commands required before the start of deployment
+
+- **helmfile.yaml**:
+1. Add the release name, path of helm charts and namespace for the services, 2. Mention the desired state of the service, 3. Dependency of the services.
+Get more information about helmfile at https://helmfile.readthedocs.io/en/latest/
+
+- **dev/preprod/prod.yaml**: Values for all the services are defined in this file. Below values can be changed as per the requirement of the deployment.
+imageRegistry, imageName, imageTag, replicaCount, secretName, secretProviderClass, storageClassName, serviceAccountName, db_url, resources.limits, resources.requests, storage_type, kafkaserver, etc for all the services.
+
+Note: Kafka has multiple arbitrary values, so the most frequently changed values can be changed from this file.
+
+- **environments.yaml**: Define the environments for the deployment.
 
 # Editing this README
 
